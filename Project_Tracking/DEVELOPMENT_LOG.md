@@ -118,6 +118,9 @@
   - Removed the temporary background switcher dock.
   - Redesigned the floating navbar into a high-contrast Misty Ghats smoked liquid glass capsule (`bg-[#0A261A]/85 backdrop-blur-2xl border border-emerald-400/30`) with sliding emerald liquid tabs and warm harvest amber CTA.
   - Harmonized the entire page palette (frosted glass cards, formula cards, market benchmark tables, and feature cards) with matching Misty Ghats emerald and sage tones.
+* **Typography & Card Aesthetics Refinement (`ad4ece2`):**
+  - Unified headline typography in "Make every harvest count." so "harvest count." matches the authoritative deep charcoal (`text-surface-darkCharcoal` `#18231D`) of "Make every".
+  - Softened the True Net Earnings Preview card aesthetics: removed the colored rainbow gradient glow behind the card, replaced harsh box borders with calm frosted white/sage tones, and replaced the yellow callout banner with a calm misty sage surface (`bg-forest-lightSage/40`) to blend harmoniously into the landscape.
 
 ### Engineering Decisions & Rationale
 1. **Vector Editorial Illustration over Heavy WebGL:** Chose a multi-layered SVG illustration with Framer Motion leaf particles instead of a 3D WebGL scene to guarantee instant 60fps performance on budget mobile phones without battery drain.
@@ -284,6 +287,9 @@
   - Removed the temporary background switcher dock.
   - Redesigned the floating navbar into a high-contrast Misty Ghats smoked liquid glass capsule (`bg-[#0A261A]/85 backdrop-blur-2xl border border-emerald-400/30`) with sliding emerald liquid tabs and warm harvest amber CTA.
   - Harmonized the entire page palette (frosted glass cards, formula cards, market benchmark tables, and feature cards) with matching Misty Ghats emerald and sage tones.
+* **Typography & Card Aesthetics Refinement (`ad4ece2`):**
+  - Unified headline typography in "Make every harvest count." so "harvest count." matches the authoritative deep charcoal (`text-surface-darkCharcoal` `#18231D`) of "Make every".
+  - Softened the True Net Earnings Preview card aesthetics: removed the colored rainbow gradient glow behind the card, replaced harsh box borders with calm frosted white/sage tones, and replaced the yellow callout banner with a calm misty sage surface (`bg-forest-lightSage/40`) to blend harmoniously into the landscape.
 
 ### Engineering Decisions & Rationale
 1. **Vector Editorial Illustration over Heavy WebGL:** Chose a multi-layered SVG illustration with Framer Motion leaf particles instead of a 3D WebGL scene to guarantee instant 60fps performance on budget mobile phones without battery drain.
