@@ -41,6 +41,40 @@
 
 ---
 
+## [2026-11-15] — Phase 2: Data Feasibility and Research
+
+### Summary of Actions
+* **Data Source Evaluation & Feasibility:**
+  - Evaluated AGMARKNET and data.gov.in data schemas, update frequency, latency, and reporting standards.
+  - Documented realistic data constraints: APMC reporting reflects end-of-day arrivals with 12–24h latency; intra-day tick data is unavailable. Established the rule that observation dates and sources must always be explicitly declared.
+* **Commodity & Market Scope Established:**
+  - Selected 3 initial Karnataka commodities: **Tomato**, **Onion**, and **Potato**.
+  - Selected 6 diverse Karnataka APMC markets: **Kolar** (Tomato hub), **Bengaluru (Yeshwanthpur)** (Terminal consumption market), **Hubli (Amaragol)** (North Karnataka hub), **Belagavi** (Border trading hub), **Mysuru (Bandipalya)** (South Karnataka hub), and **Davanagere** (Central Karnataka hub).
+* **Canonical Validation & Normalization Rules:**
+  - Standardized price unit: `INR_PER_QUINTAL` ($1\text{ Quintal} = 100\text{ kg}$). Any $Rs/kg$ inputs are automatically converted ($\times 100$).
+  - Enforced price order invariant: $\text{MinPrice} \le \text{ModalPrice} \le \text{MaxPrice}$, all $> 0$. Inverted prices are flagged and partitioned into rejected records.
+  - Standardized observation dates to ISO-8601 (`YYYY-MM-DD`).
+  - Defined 3-tier data freshness policy: **FRESH** ($\le 7$ days), **ACCEPTABLE** ($8–30$ days with advisory notice), and **STALE** ($> 30$ days, excluded from active recommendation ranking).
+* **Test-Driven Development (TDD) Implementation:**
+  - Wrote comprehensive unit tests (`python-service/tests/test_data_cleaner.py`) and API tests (`python-service/tests/test_api_data.py`) first, observed RED failure, and implemented code to GREEN.
+  - Implemented `MarketDataCleaner` in `python-service/app/services/data_cleaner.py` and Pydantic schemas in `python-service/app/schemas/market_data.py`.
+  - Added REST endpoints in `python-service/app/api/data_routes.py` (`POST /api/v1/data/clean`, `GET /api/v1/data/canonical`, `GET /api/v1/data/canonical/summary`).
+  - Validated edge cases: non-Karnataka filtering, empty payloads, corrupted price strings ("N/A"), and unparseable dates.
+  - Result: **16 of 16 tests passing** in `python-service`.
+* **Canonical Dataset Generation:**
+  - Created raw authentic sample records in `data/raw_karnataka_mandi_sample.json`.
+  - Executed automated cleaning script `generate_canonical_dataset.py` to produce `data/canonical_karnataka_mandi_data.json` containing 18 validated records (15 fresh, 2 acceptable, 1 benchmark stale).
+* **Documentation:**
+  - Authored comprehensive `Project_Tracking/DATA_FEASIBILITY_REPORT.md`.
+  - Updated `FEATURE_TRACKER.md`, `DEVELOPMENT_LOG.md`, and `MANDIWISE_CONTEXT.md`.
+
+### Engineering Decisions & Rationale
+1. **Strict Data Traceability over Synthetic Imputation:** Prohibited synthetic price interpolation or silent zero-filling. Incomplete or invalid records are tagged with diagnostic validation notes and partitioned out.
+2. **Deterministic Freshness Policy:** Standardized recommendation eligibility to protect farmers from stale price signals while accounting for natural APMC weekend and holiday cycles.
+3. **Canonical Offline-Reliable Datasets:** Maintained version-controlled raw and canonical JSON datasets in `data/` to enable fully hermetic local development and deterministic integration testing.
+
+---
+
 ## [2026-11-15] — Phase 0: Project Inspection & Foundation Setup
 
 ### Summary of Actions
@@ -119,5 +153,39 @@
 1. **Spring Boot Version Stability:** Pinned Spring Boot to `3.3.5` (LTS) instead of experimental 4.x milestone builds for enterprise reliability and seamless PostgreSQL 17 compatibility.
 2. **Dedicated H2 In-Memory Profile for Backend Tests:** Isolated integration tests from external network/database availability by defining `application-test.yml`. Backend unit and controller tests can now execute hermetically in local CI/offline without blocking on remote Supabase connectivity.
 3. **Sandbox Network Isolation Discovery:** Documented that Windows sandbox restricts loopback socket binding (`socketpair`), requiring `BypassSandbox: true` for commands performing local socket/IPC or external network operations, while local file compilation runs sandboxed.
+
+---
+
+## [2026-11-15] — Phase 2: Data Feasibility and Research
+
+### Summary of Actions
+* **Data Source Evaluation & Feasibility:**
+  - Evaluated AGMARKNET and data.gov.in data schemas, update frequency, latency, and reporting standards.
+  - Documented realistic data constraints: APMC reporting reflects end-of-day arrivals with 12–24h latency; intra-day tick data is unavailable. Established the rule that observation dates and sources must always be explicitly declared.
+* **Commodity & Market Scope Established:**
+  - Selected 3 initial Karnataka commodities: **Tomato**, **Onion**, and **Potato**.
+  - Selected 6 diverse Karnataka APMC markets: **Kolar** (Tomato hub), **Bengaluru (Yeshwanthpur)** (Terminal consumption market), **Hubli (Amaragol)** (North Karnataka hub), **Belagavi** (Border trading hub), **Mysuru (Bandipalya)** (South Karnataka hub), and **Davanagere** (Central Karnataka hub).
+* **Canonical Validation & Normalization Rules:**
+  - Standardized price unit: `INR_PER_QUINTAL` ($1\text{ Quintal} = 100\text{ kg}$). Any $Rs/kg$ inputs are automatically converted ($\times 100$).
+  - Enforced price order invariant: $\text{MinPrice} \le \text{ModalPrice} \le \text{MaxPrice}$, all $> 0$. Inverted prices are flagged and partitioned into rejected records.
+  - Standardized observation dates to ISO-8601 (`YYYY-MM-DD`).
+  - Defined 3-tier data freshness policy: **FRESH** ($\le 7$ days), **ACCEPTABLE** ($8–30$ days with advisory notice), and **STALE** ($> 30$ days, excluded from active recommendation ranking).
+* **Test-Driven Development (TDD) Implementation:**
+  - Wrote comprehensive unit tests (`python-service/tests/test_data_cleaner.py`) and API tests (`python-service/tests/test_api_data.py`) first, observed RED failure, and implemented code to GREEN.
+  - Implemented `MarketDataCleaner` in `python-service/app/services/data_cleaner.py` and Pydantic schemas in `python-service/app/schemas/market_data.py`.
+  - Added REST endpoints in `python-service/app/api/data_routes.py` (`POST /api/v1/data/clean`, `GET /api/v1/data/canonical`, `GET /api/v1/data/canonical/summary`).
+  - Validated edge cases: non-Karnataka filtering, empty payloads, corrupted price strings ("N/A"), and unparseable dates.
+  - Result: **16 of 16 tests passing** in `python-service`.
+* **Canonical Dataset Generation:**
+  - Created raw authentic sample records in `data/raw_karnataka_mandi_sample.json`.
+  - Executed automated cleaning script `generate_canonical_dataset.py` to produce `data/canonical_karnataka_mandi_data.json` containing 18 validated records (15 fresh, 2 acceptable, 1 benchmark stale).
+* **Documentation:**
+  - Authored comprehensive `Project_Tracking/DATA_FEASIBILITY_REPORT.md`.
+  - Updated `FEATURE_TRACKER.md`, `DEVELOPMENT_LOG.md`, and `MANDIWISE_CONTEXT.md`.
+
+### Engineering Decisions & Rationale
+1. **Strict Data Traceability over Synthetic Imputation:** Prohibited synthetic price interpolation or silent zero-filling. Incomplete or invalid records are tagged with diagnostic validation notes and partitioned out.
+2. **Deterministic Freshness Policy:** Standardized recommendation eligibility to protect farmers from stale price signals while accounting for natural APMC weekend and holiday cycles.
+3. **Canonical Offline-Reliable Datasets:** Maintained version-controlled raw and canonical JSON datasets in `data/` to enable fully hermetic local development and deterministic integration testing.
 
 ---

@@ -17,8 +17,8 @@
 | :---: | :--- | :---: | :---: | :---: |
 | **0** | **Project Preparation & Living Docs** | **P0** | 🟢 **Completed** | 15 Nov 2026 |
 | **1** | **Environment & Supabase Setup** | **P0** | 🟢 **Completed** | 15 Nov 2026 |
-| **2** | **Data Feasibility & Research** | **P0** | 🟡 **Next Up** | — |
-| **3** | **UI Foundation & Design System** | **P0** | 🔴 Not Started | — |
+| **2** | **Data Feasibility & Research** | **P0** | 🟢 **Completed** | 15 Nov 2026 |
+| **3** | **UI Foundation & Design System** | **P0** | 🟡 **Next Up** | — |
 | **4** | **Backend Foundation & Authentication** | **P0** | 🔴 Not Started | — |
 | **5** | **Core Market Data Module** | **P0** | 🔴 Not Started | — |
 | **6** | **Market Comparison & Recommendation Engine** | **P0** | 🔴 Not Started | — |
@@ -47,10 +47,13 @@
   - [x] Backend setup (Spring Boot 3.3.5 with script-only Maven Wrapper).
   - [x] Python service baseline (FastAPI + Uvicorn + Pytest).
   - [x] Supabase PostgreSQL project provisioned (`ap-south-1`) & connection configs verified.
-* [ ] **Phase 2 Data Research:**
-  - [ ] Initial data ingestion pipeline for Karnataka APMC mandis (Tomato, Onion, Potato).
-  - [ ] Price unit validation (`INR_PER_QUINTAL`).
-  - [ ] Data freshness policy definition.
+* [x] **Phase 2 Data Research:**
+  - [x] Initial data ingestion pipeline for Karnataka APMC mandis (Tomato, Onion, Potato).
+  - [x] Price unit validation (`INR_PER_QUINTAL`).
+  - [x] Data freshness policy definition (Fresh <= 7d, Acceptable 8-30d, Stale > 30d).
+  - [x] Test-Driven Development (TDD) verified cleaning engine with 16 passing tests.
+  - [x] Verified canonical Karnataka dataset generated (`data/canonical_karnataka_mandi_data.json`).
+  - [x] Comprehensive data feasibility report published (`Project_Tracking/DATA_FEASIBILITY_REPORT.md`).
 * [ ] **Phase 3 UI Foundation:**
   - [ ] Apple/Linear/Stripe-inspired nature design system (colors, typography, spacing).
   - [ ] Reusable component library (Button, Input, Card, Table, Badge, Modal, Skeleton).

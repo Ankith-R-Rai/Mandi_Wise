@@ -2,6 +2,8 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from datetime import datetime, timezone
 
+from app.api.data_routes import router as data_router
+
 app = FastAPI(
     title="MandiWise Python Processing Service",
     description="Dedicated microservice for agricultural data cleaning, preprocessing, and Tomato quality assessment.",
@@ -16,6 +18,8 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+app.include_router(data_router)
 
 @app.get("/health", tags=["Health"])
 def health_check():
