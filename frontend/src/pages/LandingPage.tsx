@@ -87,7 +87,7 @@ export const LandingPage: React.FC = () => {
 
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-surface-darkCharcoal tracking-tight leading-[1.12]">
                 Make every <br />
-                <span className="text-forest">harvest count.</span>
+                <span className="text-surface-darkCharcoal">harvest count.</span>
               </h1>
 
               <p className="text-base sm:text-lg text-surface-charcoal/90 leading-relaxed max-w-xl font-medium">
@@ -145,17 +145,14 @@ export const LandingPage: React.FC = () => {
                 transition={{ duration: 0.6, delay: 0.2 }}
                 className="relative"
               >
-                {/* Glow effect behind card */}
-                <div className="absolute -inset-1 rounded-3xl bg-gradient-to-r from-forest/30 via-accent-amber/20 to-emerald-400/30 blur-xl opacity-75 group-hover:opacity-100 transition duration-500" />
-
                 <Card
                   hoverLift
-                  className="relative bg-white/92 backdrop-blur-2xl border border-emerald-900/10 shadow-[0_20px_50px_rgba(11,42,29,0.2)] rounded-3xl p-6 sm:p-7 overflow-hidden"
+                  className="relative bg-white/90 backdrop-blur-2xl border border-white/80 shadow-[0_20px_50px_rgba(11,42,29,0.16)] rounded-3xl p-6 sm:p-7 overflow-hidden"
                 >
                   {/* Card Header */}
-                  <div className="flex items-center justify-between pb-4 border-b border-surface-border/70 mb-5">
+                  <div className="flex items-center justify-between pb-4 border-b border-surface-border/60 mb-5">
                     <div className="flex items-center gap-2.5">
-                      <div className="w-10 h-10 rounded-2xl bg-forest-lightSage flex items-center justify-center text-forest shadow-xs">
+                      <div className="w-10 h-10 rounded-2xl bg-forest-lightSage/60 flex items-center justify-center text-forest shadow-xs">
                         <Scale className="w-5 h-5 text-forest" />
                       </div>
                       <div>
@@ -171,9 +168,9 @@ export const LandingPage: React.FC = () => {
                   </div>
 
                   {/* Comparison Row: Kolar vs Yeshwanthpur */}
-                  <div className="space-y-3.5">
+                  <div className="space-y-3">
                     {/* Option A: Kolar Local */}
-                    <div className="p-4 rounded-2xl bg-forest-lightSage/50 border-2 border-forest shadow-xs transition-all duration-200 hover:scale-[1.01]">
+                    <div className="p-4 rounded-2xl bg-white/90 border border-forest-sage/70 shadow-xs transition-all duration-200 hover:scale-[1.01]">
                       <div className="flex items-center justify-between mb-2">
                         <div className="flex items-center gap-2">
                           <span className="text-base">📍</span>
@@ -181,7 +178,7 @@ export const LandingPage: React.FC = () => {
                             Kolar APMC (12 km)
                           </span>
                         </div>
-                        <span className="text-[11px] font-bold text-forest bg-white px-2.5 py-0.5 rounded-full border border-forest/30">
+                        <span className="text-[10px] font-bold text-forest bg-forest-lightSage px-2.5 py-0.5 rounded-full border border-forest-sage/50">
                           Recommended
                         </span>
                       </div>
@@ -202,7 +199,7 @@ export const LandingPage: React.FC = () => {
                     </div>
 
                     {/* Option B: Yeshwanthpur Distant */}
-                    <div className="p-4 rounded-2xl bg-white/70 border border-surface-border shadow-xs transition-all duration-200 hover:scale-[1.01]">
+                    <div className="p-4 rounded-2xl bg-surface-background/70 border border-surface-border/70 shadow-xs transition-all duration-200 hover:scale-[1.01]">
                       <div className="flex items-center justify-between mb-2">
                         <div className="flex items-center gap-2">
                           <span className="text-base">🏙️</span>
@@ -210,14 +207,14 @@ export const LandingPage: React.FC = () => {
                             Yeshwanthpur APMC (88 km)
                           </span>
                         </div>
-                        <span className="text-[11px] font-semibold text-amber-700 bg-amber-50 px-2 py-0.5 rounded-full border border-amber-200">
-                          ₹200 Higher Price
+                        <span className="text-[10px] font-medium text-surface-muted bg-surface-background px-2 py-0.5 rounded-full border border-surface-border">
+                          Higher Headline
                         </span>
                       </div>
                       <div className="grid grid-cols-3 gap-2 text-xs">
                         <div>
                           <span className="text-surface-muted block text-[10px]">Headline Modal</span>
-                          <span className="font-semibold text-semantic-success">₹2,400/q</span>
+                          <span className="font-semibold text-surface-charcoal">₹2,400/q</span>
                         </div>
                         <div>
                           <span className="text-surface-muted block text-[10px]">Freight &amp; Toll</span>
@@ -231,13 +228,13 @@ export const LandingPage: React.FC = () => {
                     </div>
                   </div>
 
-                  {/* Summary Callout Banner */}
-                  <div className="mt-4 p-3 bg-accent-amberLight/60 border border-accent-amber/30 rounded-xl flex items-center justify-between text-xs">
-                    <span className="text-amber-900 font-medium">
+                  {/* Summary Callout Banner (Calm Misty Sage tone) */}
+                  <div className="mt-4 p-3 bg-forest-lightSage/40 border border-forest-sage/40 rounded-xl flex items-center justify-between text-xs">
+                    <span className="text-forest-deep font-medium">
                       Selling locally yields <strong>+₹2,000 more net profit</strong> despite the lower headline rate.
                     </span>
                     <Tooltip text="MandiWise protects your wallet from hidden logistics deductions.">
-                      <HelpCircle className="w-4 h-4 text-amber-700 cursor-pointer shrink-0 ml-2" />
+                      <HelpCircle className="w-4 h-4 text-forest cursor-pointer shrink-0 ml-2" />
                     </Tooltip>
                   </div>
                 </Card>
