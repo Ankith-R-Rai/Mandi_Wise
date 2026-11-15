@@ -25,16 +25,16 @@
   - `BACKEND_SCHEMA.md`
   - `IMPLEMENTATION_PLAN.md`
 * Discovered and resolved documentation anomalies:
-  - Corrected `Database: MySQL` draft typo in `APP_FLOW.md` line 12 to `Supabase PostgreSQL`.
+  - Corrected `Database: MySQL` draft typo in `Project_Info/appflow.md` line 12 to `Supabase PostgreSQL`.
   - Renamed `Project_Info/implementation_pplan.md` to `implementation_plan.md` (fixing duplicate 'p').
-  - Created standardized `docs/` folder containing uppercase canonical filenames: `docs/PRD.md`, `docs/TRD.md`, `docs/UI_UX_DESIGN_BRIEF.md`, `docs/APP_FLOW.md`, `docs/BACKEND_SCHEMA.md`, `docs/IMPLEMENTATION_PLAN.md`.
-  - Replaced legacy "Claude Code" tool mentions across `TRD.md`, `BACKEND_SCHEMA.md`, and `IMPLEMENTATION_PLAN.md` with "Google Antigravity".
+  - Removed duplicate documentation directories, preserving `Project_Info/` as the single canonical source of truth for the 6 primary requirements and design documents.
+  - Replaced legacy "Claude Code" tool mentions across `trd.md`, `backend_schema.md`, and `implementation_plan.md` with "Google Antigravity".
 * Interacted with connected `supabase_mcp` server:
   - Verified membership in organization `hackathonais12@gmail.com's Org` (`vpxhykwtgwytmlyswewd`).
   - Identified 0 existing projects.
   - Successfully invoked `create_project` tool to provision development database `mandiwise-dev` (`tzncfzzaquyvdhblzgdm`) in region `ap-south-1` (Mumbai).
   - Verified project status is `ACTIVE_HEALTHY` and confirmed clean initial state via `list_tables`.
-* Initialized project-level living documents:
+* Initialized project-level living documents in dedicated `Project_Tracking/` directory:
   - `MANDIWISE_CONTEXT.md`
   - `ARCHITECTURE.md`
   - `FEATURE_TRACKER.md`
@@ -45,7 +45,7 @@
 
 ### Engineering Decisions & Rationale
 1. **Maven Wrapper over Global Maven:** Because `mvn` is not on the user's system PATH, using Maven Wrapper (`./mvnw` / `mvnw.cmd`) guarantees completely reproducible builds without requiring manual Windows environment variable edits.
-2. **Standardizing Docs:** Maintained both `docs/` and `Project_Info/` in complete synchronization so existing active editor sessions in the IDE remain unbroken while standard project paths adhere to `docs/`.
+2. **Dedicated Tracking Directory:** Preserved the original `Project_Info/` as the sole home for the 6 foundational specifications, and housed the 7 living project management files in `Project_Tracking/` to keep the workspace root clean and organized.
 3. **Region Selection:** Chose `ap-south-1` (Mumbai) for the Supabase project to ensure minimal latency for Karnataka agricultural market data.
 
 ---

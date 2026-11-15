@@ -57,7 +57,7 @@ $$\text{Estimated Net Earnings} = \text{Gross Revenue} - \text{Total Selling Exp
    - Missing data must never be treated as zero prices or zero costs.
    - Every price must have an observation date, unit (`INR_PER_QUINTAL`), and traceable source.
 4. **Phase-by-Phase Discipline:**
-   - Follow `docs/IMPLEMENTATION_PLAN.md` strictly.
+   - Follow `Project_Info/implementation_plan.md` strictly.
    - Never skip testing or jump phases. Cycle: `BUILD → TEST → FIX → DOCUMENT → REPORT → APPROVAL → NEXT PHASE`.
 5. **No Direct Remote Git Operations:** Source code pushes to GitHub are managed manually by the user. Antigravity manages local Git commits and branch recommendations only.
 
@@ -68,19 +68,19 @@ $$\text{Estimated Net Earnings} = \text{Gross Revenue} - \text{Total Selling Exp
 ### Phase 0: Project Preparation — **COMPLETED**
 * [x] Inspected workspace, tools, and runtimes (Node v22.19.0, OpenJDK 17.0.13, Python 3.12.10, Git 2.47.1).
 * [x] Initialized local Git repository and created comprehensive `.gitignore`.
-* [x] Harmonized all 6 project documents in both `docs/` and `Project_Info/`:
-  - Resolved `Database: MySQL` typo in `APP_FLOW.md` to `Supabase PostgreSQL`.
-  - Normalized `implementation_pplan.md` to `IMPLEMENTATION_PLAN.md`.
+* [x] Harmonized all 6 project documents in `Project_Info/`:
+  - Resolved `Database: MySQL` typo in `appflow.md` to `Supabase PostgreSQL`.
+  - Normalized `implementation_pplan.md` to `implementation_plan.md`.
   - Updated tool references from "Claude Code" to "Google Antigravity".
 * [x] Successfully provisioned Supabase PostgreSQL project `mandiwise-dev` (`tzncfzzaquyvdhblzgdm`) in `ap-south-1`.
-* [x] Created living project documentation set:
-  - `MANDIWISE_CONTEXT.md`
-  - `ARCHITECTURE.md`
-  - `FEATURE_TRACKER.md`
-  - `DEVELOPMENT_LOG.md`
-  - `API_DOCUMENTATION.md`
-  - `DATABASE_SCHEMA.md`
-  - `TESTING_STRATEGY.md`
+* [x] Organized living tracking documents into dedicated `Project_Tracking/` folder:
+  - `Project_Tracking/MANDIWISE_CONTEXT.md`
+  - `Project_Tracking/ARCHITECTURE.md`
+  - `Project_Tracking/FEATURE_TRACKER.md`
+  - `Project_Tracking/DEVELOPMENT_LOG.md`
+  - `Project_Tracking/API_DOCUMENTATION.md`
+  - `Project_Tracking/DATABASE_SCHEMA.md`
+  - `Project_Tracking/TESTING_STRATEGY.md`
 
 ### Immediate Next Target: **Phase 1 (Environment & Supabase Setup)**
 * Establish `frontend/` (React + TypeScript + Tailwind CSS + Vite).

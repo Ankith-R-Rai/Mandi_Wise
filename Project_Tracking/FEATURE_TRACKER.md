@@ -39,9 +39,9 @@
 
 * [x] **Phase 0 Infrastructure & Living Docs:**
   - [x] Initialized Git repository and `.gitignore`.
-  - [x] Harmonized project documents across `docs/` and `Project_Info/`.
+  - [x] Harmonized project documents in `Project_Info/`.
   - [x] Provisioned Supabase PostgreSQL project `mandiwise-dev`.
-  - [x] Established living documentation suite.
+  - [x] Established living documentation suite in `Project_Tracking/`.
 * [ ] **Phase 1 Environment Baseline:**
   - [ ] Frontend setup (React + TypeScript + Tailwind CSS + Vite).
   - [ ] Backend setup (Spring Boot 3.x with Maven Wrapper).
