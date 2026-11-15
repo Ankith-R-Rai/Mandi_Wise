@@ -58,3 +58,4 @@ python-service/build/
 # Temporary / Scratch files
 tmp/
 scratch/
+.superpowers/
