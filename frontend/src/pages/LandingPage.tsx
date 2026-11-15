@@ -5,14 +5,13 @@ import {
   TrendingUp,
   Truck,
   CheckCircle2,
-  Sparkles,
   Search,
   BarChart3,
   Camera,
   HelpCircle,
   Scale,
 } from 'lucide-react';
-import { HeroBackground, type BackgroundOption } from '../components/hero/HeroBackground';
+import { HeroBackground } from '../components/hero/HeroBackground';
 import { MarketPriceTicker } from '../components/hero/MarketPriceTicker';
 import { Button } from '../components/ui/Button';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '../components/ui/Card';
@@ -38,9 +37,6 @@ import {
 import { cn } from '../utils/cn';
 
 export const LandingPage: React.FC = () => {
-  // State for Background Option Switcher (Preview 4 Options Live)
-  const [bgOption, setBgOption] = useState<BackgroundOption>('option1');
-
   // State for Market Benchmark Table
   const [selectedCommodity, setSelectedCommodity] = useState<string>('All');
   const [searchQuery, setSearchQuery] = useState<string>('');
@@ -73,48 +69,18 @@ export const LandingPage: React.FC = () => {
   return (
     <div className="flex flex-col w-full min-h-screen">
       {/* =========================================================================
-          1. HERO SECTION (Full-Bleed Screen Background with 4 Live Options)
+          1. HERO SECTION (Full-Bleed Misty Western Ghats Background)
          ========================================================================= */}
       <section className="relative isolate pt-24 pb-14 sm:pt-28 sm:pb-16 lg:pt-36 lg:pb-24 overflow-hidden min-h-screen flex flex-col justify-between">
-        {/* Full-Bleed Dynamic Background */}
-        <HeroBackground option={bgOption} />
+        {/* Full-Bleed Misty Western Ghats Background with Tree & Falling Leaves */}
+        <HeroBackground />
 
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full flex-1 flex flex-col justify-center">
-          
-          {/* Live Background Switcher Pill (High-Contrast Smoked Glass Dock) */}
-          <div className="flex justify-center mb-6 sm:mb-8">
-            <div className="inline-flex flex-wrap items-center justify-center gap-1.5 p-1.5 bg-[#06180F]/90 backdrop-blur-2xl border border-white/20 shadow-[0_15px_35px_rgba(0,0,0,0.3)] rounded-full">
-              <div className="flex items-center gap-1.5 px-3 py-1 text-xs font-bold text-amber-300">
-                <Sparkles className="w-3.5 h-3.5 text-amber-400 animate-spin" />
-                <span className="hidden sm:inline">Background Theme:</span>
-                <span className="sm:hidden">Theme:</span>
-              </div>
-              {[
-                { id: 'option1', label: '1. Misty Ghats (Photo)' },
-                { id: 'option2', label: '2. Golden Horizon' },
-                { id: 'option3', label: '3. Emerald Topo' },
-                { id: 'option4', label: '4. Living Mesh' },
-              ].map((opt) => (
-                <button
-                  key={opt.id}
-                  onClick={() => setBgOption(opt.id as BackgroundOption)}
-                  className={cn(
-                    'px-3.5 py-1.5 text-xs font-semibold rounded-full transition-all duration-200 cursor-pointer select-none',
-                    bgOption === opt.id
-                      ? 'bg-emerald-500 text-slate-950 font-bold shadow-md shadow-emerald-500/30 scale-105'
-                      : 'text-white/80 hover:bg-white/10 hover:text-white'
-                  )}
-                >
-                  {opt.label}
-                </button>
-              ))}
-            </div>
-          </div>
-
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
-            {/* Left Column: Editorial Value Proposition on Frosted Glass Island */}
-            <div className="lg:col-span-6 bg-white/90 backdrop-blur-2xl border border-white/80 p-6 sm:p-8 lg:p-9 rounded-3xl shadow-[0_20px_60px_rgba(0,0,0,0.18)] space-y-6">
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-forest-lightSage/70 border border-forest-sage/60 text-forest text-xs font-bold shadow-xs">
+            
+            {/* Left Column: Editorial Value Proposition on Frosted Misty Glass Island */}
+            <div className="lg:col-span-6 bg-white/92 backdrop-blur-2xl border border-emerald-900/10 p-6 sm:p-8 lg:p-10 rounded-3xl shadow-[0_20px_60px_rgba(11,42,29,0.22)] space-y-6">
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-forest-lightSage/80 border border-forest-sage/60 text-forest text-xs font-bold shadow-xs">
                 <span className="w-2 h-2 rounded-full bg-forest-fresh animate-pulse" />
                 <span>Karnataka Market Decision-Support Platform</span>
               </div>
@@ -131,8 +97,7 @@ export const LandingPage: React.FC = () => {
               <div className="flex flex-wrap items-center gap-3.5 pt-2">
                 <Button
                   size="lg"
-                  variant="primary"
-                  className="rounded-xl shadow-lg shadow-forest/20"
+                  className="rounded-xl bg-forest hover:bg-forest-deep text-white shadow-lg shadow-forest/25"
                   rightIcon={<ArrowRight className="w-4 h-4" />}
                   onClick={() => {
                     const el = document.getElementById('benchmarks');
@@ -145,7 +110,7 @@ export const LandingPage: React.FC = () => {
                 <Button
                   size="lg"
                   variant="outline"
-                  className="rounded-xl bg-white/85 backdrop-blur-md hover:bg-white border-white/80 shadow-sm"
+                  className="rounded-xl bg-white/80 backdrop-blur-md hover:bg-white border-forest-sage/50 text-surface-charcoal hover:text-forest shadow-sm"
                   onClick={() => {
                     const el = document.getElementById('axiom');
                     el?.scrollIntoView({ behavior: 'smooth' });
@@ -181,11 +146,11 @@ export const LandingPage: React.FC = () => {
                 className="relative"
               >
                 {/* Glow effect behind card */}
-                <div className="absolute -inset-1 rounded-3xl bg-gradient-to-r from-forest/30 via-accent-amber/20 to-emerald-400/30 blur-xl opacity-70 group-hover:opacity-100 transition duration-500" />
+                <div className="absolute -inset-1 rounded-3xl bg-gradient-to-r from-forest/30 via-accent-amber/20 to-emerald-400/30 blur-xl opacity-75 group-hover:opacity-100 transition duration-500" />
 
                 <Card
                   hoverLift
-                  className="relative bg-white/85 backdrop-blur-2xl border border-white/80 shadow-[0_20px_50px_rgba(31,81,56,0.15)] rounded-3xl p-6 sm:p-7 overflow-hidden"
+                  className="relative bg-white/92 backdrop-blur-2xl border border-emerald-900/10 shadow-[0_20px_50px_rgba(11,42,29,0.2)] rounded-3xl p-6 sm:p-7 overflow-hidden"
                 >
                   {/* Card Header */}
                   <div className="flex items-center justify-between pb-4 border-b border-surface-border/70 mb-5">
@@ -208,7 +173,7 @@ export const LandingPage: React.FC = () => {
                   {/* Comparison Row: Kolar vs Yeshwanthpur */}
                   <div className="space-y-3.5">
                     {/* Option A: Kolar Local */}
-                    <div className="p-4 rounded-2xl bg-forest-lightSage/50 border-2 border-forest/80 shadow-xs transition-all duration-200 hover:scale-[1.01]">
+                    <div className="p-4 rounded-2xl bg-forest-lightSage/50 border-2 border-forest shadow-xs transition-all duration-200 hover:scale-[1.01]">
                       <div className="flex items-center justify-between mb-2">
                         <div className="flex items-center gap-2">
                           <span className="text-base">📍</span>
@@ -255,7 +220,7 @@ export const LandingPage: React.FC = () => {
                           <span className="font-semibold text-semantic-success">₹2,400/q</span>
                         </div>
                         <div>
-                          <span className="text-surface-muted block text-[10px]">Freight & Toll</span>
+                          <span className="text-surface-muted block text-[10px]">Freight &amp; Toll</span>
                           <span className="font-semibold text-semantic-error">-₹8,200</span>
                         </div>
                         <div className="text-right">
@@ -296,7 +261,7 @@ export const LandingPage: React.FC = () => {
       {/* =========================================================================
           2. NET EARNINGS AXIOM & FORMULA BREAKDOWN
          ========================================================================= */}
-      <section id="axiom" className="py-16 bg-white border-y border-surface-border">
+      <section id="axiom" className="py-20 bg-[#F5F9F6] border-y border-emerald-900/10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-2xl mx-auto mb-12">
             <Badge variant="fresh" size="md" className="mb-2">
@@ -312,11 +277,11 @@ export const LandingPage: React.FC = () => {
 
           {/* Mathematical Formula Cards */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-            <Card hoverLift className="border-forest-sage bg-forest-lightSage/30">
+            <Card hoverLift className="border-forest-sage bg-white shadow-xs">
               <CardHeader>
                 <div className="text-xs font-bold uppercase tracking-wider text-forest">Step 1</div>
                 <CardTitle className="text-lg">Gross Revenue</CardTitle>
-                <CardDescription className="font-mono text-xs text-forest-deep bg-white/70 p-2 rounded border border-forest-sage/40">
+                <CardDescription className="font-mono text-xs text-forest-deep bg-forest-lightSage/40 p-2.5 rounded-lg border border-forest-sage/40">
                   Gross Revenue = (Quantity / 100) &times; Modal Price
                 </CardDescription>
               </CardHeader>
@@ -325,11 +290,11 @@ export const LandingPage: React.FC = () => {
               </CardContent>
             </Card>
 
-            <Card hoverLift className="border-amber-200 bg-amber-50/40">
+            <Card hoverLift className="border-amber-200 bg-white shadow-xs">
               <CardHeader>
                 <div className="text-xs font-bold uppercase tracking-wider text-amber-800">Step 2</div>
                 <CardTitle className="text-lg">Selling Expenses</CardTitle>
-                <CardDescription className="font-mono text-xs text-amber-900 bg-white/70 p-2 rounded border border-amber-200">
+                <CardDescription className="font-mono text-xs text-amber-900 bg-amber-50/60 p-2.5 rounded-lg border border-amber-200">
                   Total Expenses = Freight Cost + Unloading + Fees
                 </CardDescription>
               </CardHeader>
@@ -338,11 +303,11 @@ export const LandingPage: React.FC = () => {
               </CardContent>
             </Card>
 
-            <Card hoverLift className="border-forest bg-forest text-white">
+            <Card hoverLift className="bg-gradient-to-br from-[#103E28] to-[#1E573A] border-emerald-600/40 text-white shadow-lg shadow-forest/20">
               <CardHeader>
-                <div className="text-xs font-bold uppercase tracking-wider text-forest-sage">Step 3 &bull; Result</div>
+                <div className="text-xs font-bold uppercase tracking-wider text-emerald-300">Step 3 &bull; Result</div>
                 <CardTitle className="text-lg text-white">Estimated Net Earnings</CardTitle>
-                <CardDescription className="font-mono text-xs text-white bg-forest-deep p-2 rounded border border-forest-fresh/40">
+                <CardDescription className="font-mono text-xs text-white bg-black/25 p-2.5 rounded-lg border border-white/20">
                   Net Earnings = Gross Revenue - Total Expenses
                 </CardDescription>
               </CardHeader>
@@ -353,13 +318,13 @@ export const LandingPage: React.FC = () => {
           </div>
 
           {/* Real-World Concrete Example Comparison */}
-          <div className="bg-surface-background rounded-2xl border border-surface-border p-6 sm:p-8">
+          <div className="bg-white rounded-3xl border border-emerald-900/10 p-6 sm:p-8 shadow-xs">
             <h3 className="text-sm font-bold uppercase tracking-wider text-surface-muted mb-4">
               Concrete Example: 2,500 kg (25 Quintals) of Tomatoes from Kolar Taluk
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* Option 1: Closer Mandi */}
-              <div className="bg-white p-5 rounded-2xl border-2 border-forest shadow-sm relative transition-transform duration-200 hover:-translate-y-1 hover:shadow-md">
+              <div className="bg-[#F8FAF7] p-5 rounded-2xl border-2 border-forest shadow-xs relative transition-transform duration-200 hover:-translate-y-1 hover:shadow-md">
                 <span className="absolute -top-3 right-4 bg-forest text-white text-[11px] font-bold px-3 py-0.5 rounded-full shadow-xs">
                   Recommended Choice
                 </span>
@@ -388,7 +353,7 @@ export const LandingPage: React.FC = () => {
               </div>
 
               {/* Option 2: Distant Terminal Mandi */}
-              <div className="bg-white p-5 rounded-2xl border border-surface-border shadow-sm transition-transform duration-200 hover:-translate-y-1 hover:shadow-md">
+              <div className="bg-[#F8FAF7] p-5 rounded-2xl border border-surface-border shadow-xs transition-transform duration-200 hover:-translate-y-1 hover:shadow-md">
                 <div className="flex items-center justify-between mb-3">
                   <h4 className="text-base font-bold text-surface-darkCharcoal">
                     Bengaluru Yeshwanthpur (Distant)
@@ -413,7 +378,7 @@ export const LandingPage: React.FC = () => {
                     <span className="text-surface-darkCharcoal">₹51,800</span>
                   </div>
                 </div>
-                <p className="text-[11px] text-amber-700 bg-amber-50 p-2 rounded mt-3">
+                <p className="text-[11px] text-amber-800 bg-amber-50 p-2.5 rounded-lg mt-3 border border-amber-200/60">
                   ⚠️ Farmer loses <strong>₹2,000 in net profit</strong> by traveling to Bangalore despite the ₹200 higher headline price.
                 </p>
               </div>
@@ -425,7 +390,7 @@ export const LandingPage: React.FC = () => {
       {/* =========================================================================
           3. LIVE MARKET BENCHMARK EXPLORATION TABLE
          ========================================================================= */}
-      <section id="benchmarks" className="py-16 bg-surface-background">
+      <section id="benchmarks" className="py-20 bg-[#EDF5F0]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
             <div>
@@ -441,7 +406,7 @@ export const LandingPage: React.FC = () => {
             </div>
 
             {/* Commodity Filter Tabs with Hover Animation */}
-            <div className="flex items-center gap-1.5 bg-white p-1 rounded-2xl border border-surface-border shadow-xs">
+            <div className="flex items-center gap-1.5 bg-white p-1 rounded-2xl border border-emerald-900/10 shadow-xs">
               {['All', 'Tomato', 'Onion', 'Potato'].map((comm) => (
                 <button
                   key={comm}
@@ -449,7 +414,7 @@ export const LandingPage: React.FC = () => {
                   className={cn(
                     'px-3.5 py-1.5 text-xs font-semibold rounded-xl transition-all duration-200 cursor-pointer select-none',
                     selectedCommodity === comm
-                      ? 'bg-forest text-white shadow-sm shadow-forest/20 scale-105'
+                      ? 'bg-forest text-white shadow-sm shadow-forest/25 scale-105'
                       : 'text-surface-charcoal hover:bg-forest-lightSage hover:text-forest'
                   )}
                 >
@@ -512,7 +477,7 @@ export const LandingPage: React.FC = () => {
             </TableHeader>
             <TableBody>
               {filteredRecords.map((item, idx) => (
-                <TableRow key={`${item.commodity}-${item.market}-${idx}`}>
+                <TableRow key={`${item.commodity}-${item.market}-${idx}`} className="hover:bg-emerald-50/70">
                   <TableCell className="font-semibold text-surface-darkCharcoal">
                     {item.commodity === 'Tomato' ? '🍅' : item.commodity === 'Onion' ? '🧅' : '🥔'} {item.commodity}{' '}
                     <span className="text-xs font-normal text-surface-muted">({item.variety})</span>
@@ -556,7 +521,7 @@ export const LandingPage: React.FC = () => {
       {/* =========================================================================
           4. FEATURE CAPABILITIES GRID
          ========================================================================= */}
-      <section id="features" className="py-16 bg-white border-b border-surface-border">
+      <section id="features" className="py-20 bg-white border-b border-emerald-900/10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-2xl mx-auto mb-12">
             <h2 className="text-2xl sm:text-3xl font-bold text-surface-darkCharcoal tracking-tight">
@@ -568,9 +533,9 @@ export const LandingPage: React.FC = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <Card hoverLift className="cursor-pointer">
+            <Card hoverLift className="cursor-pointer border-emerald-900/10">
               <CardHeader>
-                <div className="w-10 h-10 rounded-2xl bg-forest-lightSage flex items-center justify-center text-forest mb-2">
+                <div className="w-10 h-10 rounded-2xl bg-forest-lightSage flex items-center justify-center text-forest mb-2 shadow-xs">
                   <TrendingUp className="w-5 h-5" />
                 </div>
                 <CardTitle>Mandi Recommender</CardTitle>
@@ -580,9 +545,9 @@ export const LandingPage: React.FC = () => {
               </CardHeader>
             </Card>
 
-            <Card hoverLift className="cursor-pointer">
+            <Card hoverLift className="cursor-pointer border-emerald-900/10">
               <CardHeader>
-                <div className="w-10 h-10 rounded-2xl bg-amber-50 flex items-center justify-center text-amber-700 mb-2">
+                <div className="w-10 h-10 rounded-2xl bg-amber-50 flex items-center justify-center text-amber-700 mb-2 shadow-xs">
                   <Truck className="w-5 h-5" />
                 </div>
                 <CardTitle>Transport Cost Engine</CardTitle>
@@ -592,9 +557,9 @@ export const LandingPage: React.FC = () => {
               </CardHeader>
             </Card>
 
-            <Card hoverLift className="cursor-pointer">
+            <Card hoverLift className="cursor-pointer border-emerald-900/10">
               <CardHeader>
-                <div className="w-10 h-10 rounded-2xl bg-emerald-50 flex items-center justify-center text-emerald-700 mb-2">
+                <div className="w-10 h-10 rounded-2xl bg-emerald-50 flex items-center justify-center text-emerald-700 mb-2 shadow-xs">
                   <BarChart3 className="w-5 h-5" />
                 </div>
                 <CardTitle>3-Tier Freshness</CardTitle>
@@ -604,9 +569,9 @@ export const LandingPage: React.FC = () => {
               </CardHeader>
             </Card>
 
-            <Card hoverLift className="cursor-pointer">
+            <Card hoverLift className="cursor-pointer border-emerald-900/10">
               <CardHeader>
-                <div className="w-10 h-10 rounded-2xl bg-forest-lightSage flex items-center justify-center text-forest mb-2">
+                <div className="w-10 h-10 rounded-2xl bg-forest-lightSage flex items-center justify-center text-forest mb-2 shadow-xs">
                   <Camera className="w-5 h-5" />
                 </div>
                 <CardTitle>Quality Vision (Phase 5)</CardTitle>
@@ -622,7 +587,7 @@ export const LandingPage: React.FC = () => {
       {/* =========================================================================
           5. INTERACTIVE UI COMPONENT SHOWCASE (Phase 3 Living Styleguide)
          ========================================================================= */}
-      <section id="design-system" className="py-16 bg-surface-background">
+      <section id="design-system" className="py-20 bg-[#F5F9F6]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-2xl mx-auto mb-10">
             <Badge variant="neutral" size="sm" className="mb-2">
@@ -653,7 +618,7 @@ export const LandingPage: React.FC = () => {
           {/* Interactive Playground Cards */}
           <div className="max-w-4xl mx-auto">
             {activeUiTab === 'buttons' && (
-              <Card hoverLift className="p-8 space-y-6">
+              <Card hoverLift className="p-8 space-y-6 border-emerald-900/10 shadow-xs">
                 <div>
                   <h3 className="text-sm font-bold text-surface-darkCharcoal mb-3 uppercase tracking-wider">
                     Button Variants with Magnetic Hover &amp; Spring Physics
@@ -691,7 +656,7 @@ export const LandingPage: React.FC = () => {
             )}
 
             {activeUiTab === 'inputs' && (
-              <Card hoverLift className="p-8 space-y-5">
+              <Card hoverLift className="p-8 space-y-5 border-emerald-900/10 shadow-xs">
                 <h3 className="text-sm font-bold text-surface-darkCharcoal uppercase tracking-wider">
                   Accessible Form Inputs
                 </h3>
@@ -717,7 +682,7 @@ export const LandingPage: React.FC = () => {
             )}
 
             {activeUiTab === 'badges' && (
-              <Card hoverLift className="p-8 space-y-6">
+              <Card hoverLift className="p-8 space-y-6 border-emerald-900/10 shadow-xs">
                 <div>
                   <h3 className="text-sm font-bold text-surface-darkCharcoal mb-3 uppercase tracking-wider">
                     Semantic Status Badges
@@ -745,7 +710,7 @@ export const LandingPage: React.FC = () => {
             )}
 
             {activeUiTab === 'feedback' && (
-              <Card hoverLift className="p-8 space-y-6">
+              <Card hoverLift className="p-8 space-y-6 border-emerald-900/10 shadow-xs">
                 <div>
                   <h3 className="text-sm font-bold text-surface-darkCharcoal mb-3 uppercase tracking-wider">
                     Interactive Accessible Modal Dialog
