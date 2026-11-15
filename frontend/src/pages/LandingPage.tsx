@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { motion } from 'motion/react';
 import {
   ArrowRight,
   TrendingUp,
@@ -9,8 +10,9 @@ import {
   BarChart3,
   Camera,
   HelpCircle,
+  Scale,
 } from 'lucide-react';
-import { HeroIllustration } from '../components/hero/HeroIllustration';
+import { HeroBackground, type BackgroundOption } from '../components/hero/HeroBackground';
 import { MarketPriceTicker } from '../components/hero/MarketPriceTicker';
 import { Button } from '../components/ui/Button';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '../components/ui/Card';
@@ -33,8 +35,12 @@ import {
   CANONICAL_MANDI_RECORDS,
   type CanonicalPriceRecord,
 } from '../data/canonicalMandiData';
+import { cn } from '../utils/cn';
 
 export const LandingPage: React.FC = () => {
+  // State for Background Option Switcher (Preview 4 Options Live)
+  const [bgOption, setBgOption] = useState<BackgroundOption>('option1');
+
   // State for Market Benchmark Table
   const [selectedCommodity, setSelectedCommodity] = useState<string>('All');
   const [searchQuery, setSearchQuery] = useState<string>('');
@@ -67,16 +73,50 @@ export const LandingPage: React.FC = () => {
   return (
     <div className="flex flex-col w-full min-h-screen">
       {/* =========================================================================
-          1. HERO SECTION
+          1. HERO SECTION (Full-Bleed Screen Background with 4 Live Options)
          ========================================================================= */}
-      <section className="relative pt-6 pb-16 lg:pt-10 lg:pb-24 overflow-hidden">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+      <section className="relative pt-24 pb-14 sm:pt-28 sm:pb-16 lg:pt-32 lg:pb-20 overflow-hidden min-h-[92vh] flex flex-col justify-between">
+        {/* Full-Bleed Dynamic Background */}
+        <HeroBackground option={bgOption} />
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full z-10 flex-1 flex flex-col justify-center">
+          
+          {/* Live Background Switcher Pill (User can toggle between all 4 options live) */}
+          <div className="flex justify-center mb-6 sm:mb-8">
+            <div className="inline-flex flex-wrap items-center justify-center gap-1.5 p-1.5 bg-white/85 backdrop-blur-2xl border border-white/60 shadow-[0_8px_30px_rgb(0,0,0,0.08)] rounded-full">
+              <div className="flex items-center gap-1.5 px-3 py-1 text-xs font-bold text-forest">
+                <Sparkles className="w-3.5 h-3.5 text-accent-amber animate-spin" />
+                <span className="hidden sm:inline">Background Preview:</span>
+                <span className="sm:hidden">Theme:</span>
+              </div>
+              {[
+                { id: 'option1', label: '1. Misty Ghats (Photo)' },
+                { id: 'option2', label: '2. Golden Horizon' },
+                { id: 'option3', label: '3. Emerald Topo' },
+                { id: 'option4', label: '4. Living Mesh' },
+              ].map((opt) => (
+                <button
+                  key={opt.id}
+                  onClick={() => setBgOption(opt.id as BackgroundOption)}
+                  className={cn(
+                    'px-3.5 py-1.5 text-xs font-semibold rounded-full transition-all duration-200 cursor-pointer select-none',
+                    bgOption === opt.id
+                      ? 'bg-forest text-white shadow-md shadow-forest/25 scale-105'
+                      : 'text-surface-charcoal/80 hover:bg-forest-lightSage/70 hover:text-forest'
+                  )}
+                >
+                  {opt.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
             {/* Left Column: Editorial Value Proposition */}
             <div className="lg:col-span-6 space-y-6">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-forest-lightSage border border-forest-sage text-forest text-xs font-semibold">
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/85 backdrop-blur-md border border-white/70 text-forest text-xs font-bold shadow-xs">
                 <span className="w-2 h-2 rounded-full bg-forest-fresh animate-pulse" />
-                <span>Karnataka Market Decision-Support</span>
+                <span>Karnataka Market Decision-Support Platform</span>
               </div>
 
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-surface-darkCharcoal tracking-tight leading-[1.12]">
@@ -84,7 +124,7 @@ export const LandingPage: React.FC = () => {
                 <span className="text-forest">harvest count.</span>
               </h1>
 
-              <p className="text-base sm:text-lg text-surface-charcoal/80 leading-relaxed max-w-xl">
+              <p className="text-base sm:text-lg text-surface-charcoal/90 leading-relaxed max-w-xl font-medium">
                 The highest mandi price doesn’t guarantee the highest profit. MandiWise calculates your <strong>true expected net earnings</strong> after real transport and handling costs so you always sell with confidence.
               </p>
 
@@ -92,6 +132,7 @@ export const LandingPage: React.FC = () => {
                 <Button
                   size="lg"
                   variant="primary"
+                  className="rounded-xl shadow-lg shadow-forest/20"
                   rightIcon={<ArrowRight className="w-4 h-4" />}
                   onClick={() => {
                     const el = document.getElementById('benchmarks');
@@ -104,40 +145,143 @@ export const LandingPage: React.FC = () => {
                 <Button
                   size="lg"
                   variant="outline"
+                  className="rounded-xl bg-white/85 backdrop-blur-md hover:bg-white border-white/80 shadow-sm"
                   onClick={() => {
-                    const el = document.getElementById('benchmarks');
+                    const el = document.getElementById('axiom');
                     el?.scrollIntoView({ behavior: 'smooth' });
                   }}
                 >
-                  Explore Market Prices
+                  Explore Net Earnings Axiom
                 </Button>
               </div>
 
               {/* Trust Badge Indicators */}
-              <div className="pt-4 flex flex-wrap items-center gap-6 text-xs text-surface-muted">
-                <div className="flex items-center gap-1.5">
+              <div className="pt-2 flex flex-wrap items-center gap-3 text-xs font-medium text-surface-charcoal">
+                <div className="flex items-center gap-1.5 bg-white/75 backdrop-blur-sm px-3 py-1.5 rounded-full border border-white/60 shadow-xs">
                   <CheckCircle2 className="w-4 h-4 text-forest-fresh" />
                   <span>AGMARKNET Official Records</span>
                 </div>
-                <div className="flex items-center gap-1.5">
+                <div className="flex items-center gap-1.5 bg-white/75 backdrop-blur-sm px-3 py-1.5 rounded-full border border-white/60 shadow-xs">
                   <CheckCircle2 className="w-4 h-4 text-forest-fresh" />
                   <span>Standardized INR / Quintal</span>
                 </div>
-                <div className="flex items-center gap-1.5">
+                <div className="flex items-center gap-1.5 bg-white/75 backdrop-blur-sm px-3 py-1.5 rounded-full border border-white/60 shadow-xs">
                   <CheckCircle2 className="w-4 h-4 text-forest-fresh" />
                   <span>Zero Price Hallucination</span>
                 </div>
               </div>
             </div>
 
-            {/* Right Column: Layered Countryside Illustration */}
+            {/* Right Column: Floating Liquid Glass Net Earnings Preview Card */}
             <div className="lg:col-span-6 relative">
-              <HeroIllustration />
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.2 }}
+                className="relative"
+              >
+                {/* Glow effect behind card */}
+                <div className="absolute -inset-1 rounded-3xl bg-gradient-to-r from-forest/30 via-accent-amber/20 to-emerald-400/30 blur-xl opacity-70 group-hover:opacity-100 transition duration-500" />
+
+                <Card
+                  hoverLift
+                  className="relative bg-white/85 backdrop-blur-2xl border border-white/80 shadow-[0_20px_50px_rgba(31,81,56,0.15)] rounded-3xl p-6 sm:p-7 overflow-hidden"
+                >
+                  {/* Card Header */}
+                  <div className="flex items-center justify-between pb-4 border-b border-surface-border/70 mb-5">
+                    <div className="flex items-center gap-2.5">
+                      <div className="w-10 h-10 rounded-2xl bg-forest-lightSage flex items-center justify-center text-forest shadow-xs">
+                        <Scale className="w-5 h-5 text-forest" />
+                      </div>
+                      <div>
+                        <h3 className="text-base font-bold text-surface-darkCharcoal leading-tight">
+                          True Net Earnings Preview
+                        </h3>
+                        <p className="text-xs text-surface-muted">
+                          Kolar Taluk Farmer &bull; 25 Quintals Tomato
+                        </p>
+                      </div>
+                    </div>
+                    <Badge variant="fresh" size="sm">Live Comparison</Badge>
+                  </div>
+
+                  {/* Comparison Row: Kolar vs Yeshwanthpur */}
+                  <div className="space-y-3.5">
+                    {/* Option A: Kolar Local */}
+                    <div className="p-4 rounded-2xl bg-forest-lightSage/50 border-2 border-forest/80 shadow-xs transition-all duration-200 hover:scale-[1.01]">
+                      <div className="flex items-center justify-between mb-2">
+                        <div className="flex items-center gap-2">
+                          <span className="text-base">📍</span>
+                          <span className="font-bold text-sm text-surface-darkCharcoal">
+                            Kolar APMC (12 km)
+                          </span>
+                        </div>
+                        <span className="text-[11px] font-bold text-forest bg-white px-2.5 py-0.5 rounded-full border border-forest/30">
+                          Recommended
+                        </span>
+                      </div>
+                      <div className="grid grid-cols-3 gap-2 text-xs">
+                        <div>
+                          <span className="text-surface-muted block text-[10px]">Headline Modal</span>
+                          <span className="font-bold text-surface-charcoal">₹2,200/q</span>
+                        </div>
+                        <div>
+                          <span className="text-surface-muted block text-[10px]">Transport Cost</span>
+                          <span className="font-semibold text-semantic-error">-₹1,200</span>
+                        </div>
+                        <div className="text-right">
+                          <span className="text-surface-muted block text-[10px]">Net Take-Home</span>
+                          <span className="font-extrabold text-forest text-sm">₹53,800</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Option B: Yeshwanthpur Distant */}
+                    <div className="p-4 rounded-2xl bg-white/70 border border-surface-border shadow-xs transition-all duration-200 hover:scale-[1.01]">
+                      <div className="flex items-center justify-between mb-2">
+                        <div className="flex items-center gap-2">
+                          <span className="text-base">🏙️</span>
+                          <span className="font-semibold text-sm text-surface-darkCharcoal">
+                            Yeshwanthpur APMC (88 km)
+                          </span>
+                        </div>
+                        <span className="text-[11px] font-semibold text-amber-700 bg-amber-50 px-2 py-0.5 rounded-full border border-amber-200">
+                          ₹200 Higher Price
+                        </span>
+                      </div>
+                      <div className="grid grid-cols-3 gap-2 text-xs">
+                        <div>
+                          <span className="text-surface-muted block text-[10px]">Headline Modal</span>
+                          <span className="font-semibold text-semantic-success">₹2,400/q</span>
+                        </div>
+                        <div>
+                          <span className="text-surface-muted block text-[10px]">Freight & Toll</span>
+                          <span className="font-semibold text-semantic-error">-₹8,200</span>
+                        </div>
+                        <div className="text-right">
+                          <span className="text-surface-muted block text-[10px]">Net Take-Home</span>
+                          <span className="font-bold text-surface-darkCharcoal text-sm">₹51,800</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Summary Callout Banner */}
+                  <div className="mt-4 p-3 bg-accent-amberLight/60 border border-accent-amber/30 rounded-xl flex items-center justify-between text-xs">
+                    <span className="text-amber-900 font-medium">
+                      Selling locally yields <strong>+₹2,000 more net profit</strong> despite the lower headline rate.
+                    </span>
+                    <Tooltip text="MandiWise protects your wallet from hidden logistics deductions.">
+                      <HelpCircle className="w-4 h-4 text-amber-700 cursor-pointer shrink-0 ml-2" />
+                    </Tooltip>
+                  </div>
+                </Card>
+              </motion.div>
             </div>
           </div>
 
           {/* Live Market Price Ticker Ribbon */}
-          <div className="mt-8">
+          <div className="mt-8 sm:mt-12">
             <MarketPriceTicker
               onSelectRecord={(rec) => {
                 setSelectedRecord(rec);
@@ -168,7 +312,7 @@ export const LandingPage: React.FC = () => {
 
           {/* Mathematical Formula Cards */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-            <Card className="border-forest-sage bg-forest-lightSage/30">
+            <Card hoverLift className="border-forest-sage bg-forest-lightSage/30">
               <CardHeader>
                 <div className="text-xs font-bold uppercase tracking-wider text-forest">Step 1</div>
                 <CardTitle className="text-lg">Gross Revenue</CardTitle>
@@ -181,7 +325,7 @@ export const LandingPage: React.FC = () => {
               </CardContent>
             </Card>
 
-            <Card className="border-amber-200 bg-amber-50/40">
+            <Card hoverLift className="border-amber-200 bg-amber-50/40">
               <CardHeader>
                 <div className="text-xs font-bold uppercase tracking-wider text-amber-800">Step 2</div>
                 <CardTitle className="text-lg">Selling Expenses</CardTitle>
@@ -194,7 +338,7 @@ export const LandingPage: React.FC = () => {
               </CardContent>
             </Card>
 
-            <Card className="border-forest bg-forest text-white">
+            <Card hoverLift className="border-forest bg-forest text-white">
               <CardHeader>
                 <div className="text-xs font-bold uppercase tracking-wider text-forest-sage">Step 3 &bull; Result</div>
                 <CardTitle className="text-lg text-white">Estimated Net Earnings</CardTitle>
@@ -215,8 +359,8 @@ export const LandingPage: React.FC = () => {
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* Option 1: Closer Mandi */}
-              <div className="bg-white p-5 rounded-xl border-2 border-forest shadow-sm relative">
-                <span className="absolute -top-3 right-4 bg-forest text-white text-[11px] font-bold px-3 py-0.5 rounded-full">
+              <div className="bg-white p-5 rounded-2xl border-2 border-forest shadow-sm relative transition-transform duration-200 hover:-translate-y-1 hover:shadow-md">
+                <span className="absolute -top-3 right-4 bg-forest text-white text-[11px] font-bold px-3 py-0.5 rounded-full shadow-xs">
                   Recommended Choice
                 </span>
                 <div className="flex items-center justify-between mb-3">
@@ -233,7 +377,7 @@ export const LandingPage: React.FC = () => {
                     <span className="font-semibold">₹55,000</span>
                   </div>
                   <div className="flex justify-between text-semantic-error">
-                    <span>Transport & Loading Cost:</span>
+                    <span>Transport &amp; Loading Cost:</span>
                     <span>- ₹1,200</span>
                   </div>
                   <div className="pt-2 border-t border-surface-border flex justify-between font-bold text-sm text-forest">
@@ -244,7 +388,7 @@ export const LandingPage: React.FC = () => {
               </div>
 
               {/* Option 2: Distant Terminal Mandi */}
-              <div className="bg-white p-5 rounded-xl border border-surface-border shadow-sm">
+              <div className="bg-white p-5 rounded-2xl border border-surface-border shadow-sm transition-transform duration-200 hover:-translate-y-1 hover:shadow-md">
                 <div className="flex items-center justify-between mb-3">
                   <h4 className="text-base font-bold text-surface-darkCharcoal">
                     Bengaluru Yeshwanthpur (Distant)
@@ -261,7 +405,7 @@ export const LandingPage: React.FC = () => {
                     <span className="font-semibold">₹60,000</span>
                   </div>
                   <div className="flex justify-between text-semantic-error">
-                    <span>Transport, Toll & Unloading:</span>
+                    <span>Transport, Toll &amp; Unloading:</span>
                     <span>- ₹8,200</span>
                   </div>
                   <div className="pt-2 border-t border-surface-border flex justify-between font-bold text-sm text-surface-muted">
@@ -296,17 +440,18 @@ export const LandingPage: React.FC = () => {
               </p>
             </div>
 
-            {/* Commodity Filter Tabs */}
-            <div className="flex items-center gap-1.5 bg-white p-1 rounded-xl border border-surface-border shadow-sm">
+            {/* Commodity Filter Tabs with Hover Animation */}
+            <div className="flex items-center gap-1.5 bg-white p-1 rounded-2xl border border-surface-border shadow-xs">
               {['All', 'Tomato', 'Onion', 'Potato'].map((comm) => (
                 <button
                   key={comm}
                   onClick={() => setSelectedCommodity(comm)}
-                  className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-colors duration-150 ${
+                  className={cn(
+                    'px-3.5 py-1.5 text-xs font-semibold rounded-xl transition-all duration-200 cursor-pointer select-none',
                     selectedCommodity === comm
-                      ? 'bg-forest text-white'
-                      : 'text-surface-charcoal hover:bg-forest-lightSage'
-                  }`}
+                      ? 'bg-forest text-white shadow-sm shadow-forest/20 scale-105'
+                      : 'text-surface-charcoal hover:bg-forest-lightSage hover:text-forest'
+                  )}
                 >
                   {comm === 'Tomato' ? '🍅 Tomato' : comm === 'Onion' ? '🧅 Onion' : comm === 'Potato' ? '🥔 Potato' : 'All Crops'}
                 </button>
@@ -331,7 +476,7 @@ export const LandingPage: React.FC = () => {
 
           {/* Selected Ticker Highlight Banner */}
           {selectedRecord && (
-            <div className="mb-4 p-3.5 bg-forest-lightSage border border-forest-sage rounded-xl flex items-center justify-between text-xs">
+            <div className="mb-4 p-3.5 bg-forest-lightSage border border-forest-sage rounded-2xl flex items-center justify-between text-xs shadow-xs">
               <div className="flex items-center gap-2">
                 <span className="text-base">📌</span>
                 <span className="text-forest-deep">
@@ -344,7 +489,7 @@ export const LandingPage: React.FC = () => {
                   setSearchQuery('');
                   setSelectedCommodity('All');
                 }}
-                className="font-semibold text-forest underline hover:text-forest-deep"
+                className="font-semibold text-forest underline hover:text-forest-deep cursor-pointer"
               >
                 Clear Filter
               </button>
@@ -423,9 +568,9 @@ export const LandingPage: React.FC = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <Card hoverLift>
+            <Card hoverLift className="cursor-pointer">
               <CardHeader>
-                <div className="w-10 h-10 rounded-lg bg-forest-lightSage flex items-center justify-center text-forest mb-2">
+                <div className="w-10 h-10 rounded-2xl bg-forest-lightSage flex items-center justify-center text-forest mb-2">
                   <TrendingUp className="w-5 h-5" />
                 </div>
                 <CardTitle>Mandi Recommender</CardTitle>
@@ -435,9 +580,9 @@ export const LandingPage: React.FC = () => {
               </CardHeader>
             </Card>
 
-            <Card hoverLift>
+            <Card hoverLift className="cursor-pointer">
               <CardHeader>
-                <div className="w-10 h-10 rounded-lg bg-amber-50 flex items-center justify-center text-amber-700 mb-2">
+                <div className="w-10 h-10 rounded-2xl bg-amber-50 flex items-center justify-center text-amber-700 mb-2">
                   <Truck className="w-5 h-5" />
                 </div>
                 <CardTitle>Transport Cost Engine</CardTitle>
@@ -447,26 +592,26 @@ export const LandingPage: React.FC = () => {
               </CardHeader>
             </Card>
 
-            <Card hoverLift>
+            <Card hoverLift className="cursor-pointer">
               <CardHeader>
-                <div className="w-10 h-10 rounded-lg bg-sky-50 flex items-center justify-center text-sky-700 mb-2">
+                <div className="w-10 h-10 rounded-2xl bg-emerald-50 flex items-center justify-center text-emerald-700 mb-2">
                   <BarChart3 className="w-5 h-5" />
                 </div>
-                <CardTitle>Price Intelligence</CardTitle>
+                <CardTitle>3-Tier Freshness</CardTitle>
                 <CardDescription>
-                  Historical price trends and seasonal fluctuations across Karnataka APMCs.
+                  Explicit freshness tags (Fresh, Acceptable, Stale) so farmers never trade on outdated data.
                 </CardDescription>
               </CardHeader>
             </Card>
 
-            <Card hoverLift>
+            <Card hoverLift className="cursor-pointer">
               <CardHeader>
-                <div className="w-10 h-10 rounded-lg bg-purple-50 flex items-center justify-center text-purple-700 mb-2">
+                <div className="w-10 h-10 rounded-2xl bg-forest-lightSage flex items-center justify-center text-forest mb-2">
                   <Camera className="w-5 h-5" />
                 </div>
-                <CardTitle>Tomato Quality AI</CardTitle>
+                <CardTitle>Quality Vision (Phase 5)</CardTitle>
                 <CardDescription>
-                  Computer vision quality assessment to estimate farm-gate grading before dispatch.
+                  Fast AI image assessment of produce quality directly on mobile camera.
                 </CardDescription>
               </CardHeader>
             </Card>
@@ -475,194 +620,182 @@ export const LandingPage: React.FC = () => {
       </section>
 
       {/* =========================================================================
-          5. INTERACTIVE DESIGN SYSTEM SHOWCASE
+          5. INTERACTIVE UI COMPONENT SHOWCASE (Phase 3 Living Styleguide)
          ========================================================================= */}
       <section id="design-system" className="py-16 bg-surface-background">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-2xl mx-auto mb-10">
             <Badge variant="neutral" size="sm" className="mb-2">
-              Phase 3 Deliverable
+              Phase 3 Deliverables
             </Badge>
             <h2 className="text-2xl sm:text-3xl font-bold text-surface-darkCharcoal tracking-tight">
-              Interactive Component Library &amp; Showcase
+              Design System &amp; Component Playground
             </h2>
-            <p className="text-xs sm:text-sm text-surface-muted mt-2">
-              Live testing playground for all 11 atomic UI components in the MandiWise design system.
+            <p className="text-sm text-surface-muted mt-2">
+              Test all 11 atomic primitives built for MandiWise with rich hover interactions.
             </p>
           </div>
 
-          <Card className="p-6">
-            <div className="mb-6 border-b border-surface-border pb-4 flex items-center justify-between">
-              <Tabs
-                tabs={[
-                  { id: 'buttons', label: 'Buttons' },
-                  { id: 'badges', label: 'Badges' },
-                  { id: 'inputs', label: 'Inputs' },
-                  { id: 'dialogs', label: 'Modal Dialog' },
-                  { id: 'skeletons', label: 'Skeletons' },
-                ]}
-                activeTab={activeUiTab}
-                onTabChange={setActiveUiTab}
-              />
+          {/* Component Tabs */}
+          <div className="flex justify-center mb-8">
+            <Tabs
+              tabs={[
+                { id: 'buttons', label: 'Buttons' },
+                { id: 'inputs', label: 'Form Controls' },
+                { id: 'badges', label: 'Badges & Statuses' },
+                { id: 'feedback', label: 'Dialogs & Skeletons' },
+              ]}
+              activeTab={activeUiTab}
+              onTabChange={setActiveUiTab}
+            />
+          </div>
 
-              <div className="hidden sm:flex items-center gap-2">
-                <Tooltip text="All components support prefers-reduced-motion and WCAG AA contrast">
-                  <span className="text-xs text-forest flex items-center gap-1 cursor-help">
-                    <HelpCircle className="w-3.5 h-3.5" /> Tokens Validated
-                  </span>
-                </Tooltip>
-              </div>
-            </div>
-
-            {/* TAB 1: BUTTONS */}
+          {/* Interactive Playground Cards */}
+          <div className="max-w-4xl mx-auto">
             {activeUiTab === 'buttons' && (
-              <div className="space-y-6">
+              <Card hoverLift className="p-8 space-y-6">
                 <div>
-                  <h4 className="text-xs font-semibold text-surface-muted uppercase mb-3">Variants</h4>
-                  <div className="flex flex-wrap gap-3">
-                    <Button variant="primary">Primary (Forest)</Button>
-                    <Button variant="secondary">Secondary (Amber)</Button>
-                    <Button variant="outline">Outline</Button>
-                    <Button variant="ghost">Ghost</Button>
-                    <Button variant="danger">Danger</Button>
+                  <h3 className="text-sm font-bold text-surface-darkCharcoal mb-3 uppercase tracking-wider">
+                    Button Variants with Magnetic Hover &amp; Spring Physics
+                  </h3>
+                  <div className="flex flex-wrap items-center gap-3">
+                    <Button variant="primary">Primary Action</Button>
+                    <Button variant="secondary">Secondary Amber</Button>
+                    <Button variant="outline">Outline Neutral</Button>
+                    <Button variant="ghost">Ghost Button</Button>
+                    <Button variant="danger">Danger Button</Button>
                   </div>
                 </div>
 
-                <div>
-                  <h4 className="text-xs font-semibold text-surface-muted uppercase mb-3">Sizes</h4>
+                <div className="pt-4 border-t border-surface-border">
+                  <h3 className="text-sm font-bold text-surface-darkCharcoal mb-3 uppercase tracking-wider">
+                    Button Sizes &amp; Icons
+                  </h3>
                   <div className="flex flex-wrap items-center gap-3">
-                    <Button size="sm">Small Button</Button>
-                    <Button size="md">Medium Button (Default)</Button>
-                    <Button size="lg">Large Button</Button>
-                  </div>
-                </div>
-
-                <div>
-                  <h4 className="text-xs font-semibold text-surface-muted uppercase mb-3">States</h4>
-                  <div className="flex flex-wrap items-center gap-3">
-                    <Button isLoading={isButtonLoading} onClick={() => setIsButtonLoading(!isButtonLoading)}>
-                      {isButtonLoading ? 'Loading...' : 'Click to Toggle Spinner'}
+                    <Button size="sm" variant="primary">Small</Button>
+                    <Button size="md" variant="primary">Medium</Button>
+                    <Button size="lg" variant="primary">Large</Button>
+                    <Button
+                      variant="primary"
+                      isLoading={isButtonLoading}
+                      onClick={() => {
+                        setIsButtonLoading(true);
+                        setTimeout(() => setIsButtonLoading(false), 2000);
+                      }}
+                    >
+                      {isButtonLoading ? 'Simulating...' : 'Click for Loading State'}
                     </Button>
-                    <Button disabled>Disabled Button</Button>
-                    <Button leftIcon={<Sparkles className="w-4 h-4" />}>Icon Button</Button>
                   </div>
                 </div>
-              </div>
+              </Card>
             )}
 
-            {/* TAB 2: BADGES */}
-            {activeUiTab === 'badges' && (
-              <div className="space-y-6">
-                <div>
-                  <h4 className="text-xs font-semibold text-surface-muted uppercase mb-3">Freshness Tiers</h4>
-                  <div className="flex flex-wrap gap-3">
-                    <Badge variant="fresh">Fresh (&le; 7 days)</Badge>
-                    <Badge variant="acceptable">Acceptable (8–30 days)</Badge>
-                    <Badge variant="stale">Stale (&gt; 30 days)</Badge>
-                  </div>
-                </div>
-
-                <div>
-                  <h4 className="text-xs font-semibold text-surface-muted uppercase mb-3">Semantic States</h4>
-                  <div className="flex flex-wrap gap-3">
-                    <Badge variant="success">Success</Badge>
-                    <Badge variant="warning">Warning</Badge>
-                    <Badge variant="error">Error</Badge>
-                    <Badge variant="info">Information</Badge>
-                    <Badge variant="neutral">Neutral</Badge>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* TAB 3: INPUTS */}
             {activeUiTab === 'inputs' && (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-2xl">
-                <Input
-                  label="Farmer Origin Village / Taluk"
-                  placeholder="e.g. Srinivaspur, Kolar"
-                  value={inputVal}
-                  onChange={(e) => setInputVal(e.target.value)}
-                  helperText="Used to compute exact road distance to mandis."
-                />
-
-                <Select
-                  label="Select Primary Crop"
-                  options={[
-                    { label: '🍅 Tomato (Hybrid)', value: 'tomato_hybrid' },
-                    { label: '🧅 Onion (Red)', value: 'onion_red' },
-                    { label: '🥔 Potato (Jyoti)', value: 'potato_jyoti' },
-                  ]}
-                  helperText="Market comparison benchmarks adjust by commodity."
-                />
-
-                <Input
-                  label="Invalid Input Test"
-                  placeholder="Error state demonstration"
-                  error="Quantity must be greater than zero kg"
-                  defaultValue="-50"
-                />
-
-                <Input
-                  label="Disabled State"
-                  disabled
-                  defaultValue="Automatic GPS Coordinates"
-                />
-              </div>
+              <Card hoverLift className="p-8 space-y-5">
+                <h3 className="text-sm font-bold text-surface-darkCharcoal uppercase tracking-wider">
+                  Accessible Form Inputs
+                </h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <Input
+                    label="Farm / Village Location"
+                    placeholder="e.g. Chintamani, Kolar"
+                    value={inputVal}
+                    onChange={(e) => setInputVal(e.target.value)}
+                    helperText="Used to calculate distance to APMC markets"
+                  />
+                  <Select
+                    label="Target Commodity"
+                    options={[
+                      { value: 'tomato', label: 'Tomato (High Spoilage)' },
+                      { value: 'onion', label: 'Onion (Moderate Shelf Life)' },
+                      { value: 'potato', label: 'Potato (Long Shelf Life)' },
+                    ]}
+                    helperText="Shelf-life affects holding decision"
+                  />
+                </div>
+              </Card>
             )}
 
-            {/* TAB 4: MODAL DIALOG */}
-            {activeUiTab === 'dialogs' && (
-              <div className="space-y-4">
-                <p className="text-xs text-surface-muted">
-                  Click below to test the accessible modal with smooth spring entrance and backdrop blur.
-                </p>
-                <Button variant="primary" onClick={() => setIsModalOpen(true)}>
-                  Open Demonstration Modal
-                </Button>
-              </div>
-            )}
-
-            {/* TAB 5: SKELETONS */}
-            {activeUiTab === 'skeletons' && (
-              <div className="space-y-4 max-w-md">
-                <p className="text-xs text-surface-muted">
-                  Shimmer pulse placeholders for loading cards, tables, and text lines.
-                </p>
-                <div className="flex items-center gap-3">
-                  <Skeleton variant="circle" />
-                  <div className="flex-1 space-y-2">
-                    <Skeleton variant="text" className="w-3/4" />
-                    <Skeleton variant="text" className="w-1/2" />
+            {activeUiTab === 'badges' && (
+              <Card hoverLift className="p-8 space-y-6">
+                <div>
+                  <h3 className="text-sm font-bold text-surface-darkCharcoal mb-3 uppercase tracking-wider">
+                    Semantic Status Badges
+                  </h3>
+                  <div className="flex flex-wrap items-center gap-3">
+                    <Badge variant="success">Success / Verified</Badge>
+                    <Badge variant="warning">Warning / Delayed</Badge>
+                    <Badge variant="error">High Spoilage Risk</Badge>
+                    <Badge variant="info">AGMARKNET Sourced</Badge>
+                    <Badge variant="neutral">Draft Record</Badge>
                   </div>
                 </div>
-                <Skeleton variant="card" />
-              </div>
+
+                <div className="pt-4 border-t border-surface-border">
+                  <h3 className="text-sm font-bold text-surface-darkCharcoal mb-3 uppercase tracking-wider">
+                    Mandi Data Freshness Badges
+                  </h3>
+                  <div className="flex flex-wrap items-center gap-3">
+                    <Badge variant="fresh">Fresh (&le; 7 Days)</Badge>
+                    <Badge variant="acceptable">Acceptable (8-30 Days)</Badge>
+                    <Badge variant="stale">Stale (&gt; 30 Days)</Badge>
+                  </div>
+                </div>
+              </Card>
             )}
-          </Card>
+
+            {activeUiTab === 'feedback' && (
+              <Card hoverLift className="p-8 space-y-6">
+                <div>
+                  <h3 className="text-sm font-bold text-surface-darkCharcoal mb-3 uppercase tracking-wider">
+                    Interactive Accessible Modal Dialog
+                  </h3>
+                  <Button
+                    variant="primary"
+                    onClick={() => setIsModalOpen(true)}
+                  >
+                    Open Interactive Dialog
+                  </Button>
+                </div>
+
+                <div className="pt-4 border-t border-surface-border">
+                  <h3 className="text-sm font-bold text-surface-darkCharcoal mb-3 uppercase tracking-wider">
+                    Skeleton Shimmer Placeholders
+                  </h3>
+                  <div className="space-y-2 max-w-sm">
+                    <Skeleton className="h-4 w-3/4 rounded" />
+                    <Skeleton className="h-4 w-full rounded" />
+                    <Skeleton className="h-4 w-1/2 rounded" />
+                  </div>
+                </div>
+              </Card>
+            )}
+          </div>
         </div>
       </section>
 
-      {/* Modal Dialog Instance */}
+      {/* Modal Primitive Demo */}
       <Modal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        title="MandiWise Decision Simulator"
-        description="Verify mandi distance and vehicle transport rate."
+        title="MandiWise Recommendation Engine"
       >
-        <div className="space-y-4 text-xs text-surface-charcoal">
-          <p>
-            This modal is fully accessible, traps focus, listens for the <strong>Escape</strong> key, and features fluid spring scaling animation.
+        <div className="space-y-4">
+          <p className="text-sm text-surface-charcoal leading-relaxed">
+            MandiWise optimizes strictly for <strong>net take-home revenue</strong>.
+            Before advising any farmer to travel to a terminal market, our algorithms factor in:
           </p>
-          <div className="p-3 bg-forest-lightSage rounded-lg text-forest font-medium">
-            ✅ All design tokens strictly conform to UI_UX_DESIGN_BRIEF.md.
-          </div>
-          <div className="flex justify-end gap-2 pt-2">
+          <ul className="list-disc pl-5 text-xs text-surface-muted space-y-1.5">
+            <li>Truck freight charges (distance &times; fuel rate)</li>
+            <li>Market entrance fees, weighing, and unbagging cess</li>
+            <li>Transit spoilage risk based on commodity perishability</li>
+          </ul>
+          <div className="flex justify-end gap-2 pt-4 border-t border-surface-border">
             <Button variant="outline" size="sm" onClick={() => setIsModalOpen(false)}>
               Cancel
             </Button>
             <Button variant="primary" size="sm" onClick={() => setIsModalOpen(false)}>
-              Save Settings
+              Got it
             </Button>
           </div>
         </div>

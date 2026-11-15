@@ -13,12 +13,13 @@ export const Card = React.forwardRef<HTMLDivElement, CardProps>(
         ref={ref}
         whileHover={
           hoverLift
-            ? { y: -3, boxShadow: '0 10px 25px -5px rgba(31, 81, 56, 0.08)' }
+            ? { y: -6, scale: 1.01, boxShadow: '0 20px 35px -10px rgba(31, 81, 56, 0.15)' }
             : undefined
         }
-        transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
+        transition={{ type: 'spring', stiffness: 350, damping: 25 }}
         className={cn(
           'bg-white rounded-xl border border-surface-border shadow-sm overflow-hidden transition-all duration-200',
+          hoverLift && 'hover:border-forest/40',
           className
         )}
         {...props}

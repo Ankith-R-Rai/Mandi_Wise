@@ -54,8 +54,8 @@ export const MarketPriceTicker: React.FC<MarketPriceTickerProps> = ({
                 key={`${item.commodity}-${item.market}-${index}`}
                 onClick={() => onSelectRecord?.(item)}
                 className={cn(
-                  'flex items-center gap-2 shrink-0 text-left py-1 px-2.5 rounded-lg transition-colors duration-150',
-                  'hover:bg-forest-lightSage focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-forest text-xs'
+                  'flex items-center gap-2 shrink-0 text-left py-1.5 px-3 rounded-lg transition-all duration-200 cursor-pointer select-none',
+                  'hover:bg-forest-lightSage/90 hover:scale-105 hover:shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-forest text-xs'
                 )}
               >
                 <span className="text-base select-none">{icon}</span>

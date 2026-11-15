@@ -15,11 +15,11 @@ export interface ButtonProps extends Omit<HTMLMotionProps<'button'>, 'children'>
 }
 
 const variantStyles: Record<ButtonVariant, string> = {
-  primary: 'bg-forest hover:bg-forest-deep text-white shadow-sm border border-transparent',
-  secondary: 'bg-accent-amber hover:bg-amber-600 text-white shadow-sm border border-transparent',
-  outline: 'bg-white hover:bg-forest-lightSage text-surface-charcoal border border-surface-border hover:border-forest-sage',
+  primary: 'bg-forest hover:bg-forest-deep text-white shadow-sm hover:shadow-lg hover:shadow-forest/25 border border-transparent',
+  secondary: 'bg-accent-amber hover:bg-amber-600 text-white shadow-sm hover:shadow-lg hover:shadow-amber-500/25 border border-transparent',
+  outline: 'bg-white hover:bg-forest-lightSage text-surface-charcoal border border-surface-border hover:border-forest-sage hover:shadow-md hover:shadow-forest/10',
   ghost: 'bg-transparent hover:bg-forest-lightSage text-surface-charcoal hover:text-forest',
-  danger: 'bg-semantic-error hover:bg-red-700 text-white shadow-sm border border-transparent',
+  danger: 'bg-semantic-error hover:bg-red-700 text-white shadow-sm hover:shadow-lg hover:shadow-red-600/25 border border-transparent',
 };
 
 const sizeStyles: Record<ButtonSize, string> = {
@@ -50,13 +50,14 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       <motion.button
         ref={ref}
         type={type}
-        whileTap={isDisabled ? undefined : { scale: 0.98 }}
-        transition={{ type: 'spring', stiffness: 450, damping: 25 }}
+        whileHover={isDisabled ? undefined : { scale: 1.03, y: -2 }}
+        whileTap={isDisabled ? undefined : { scale: 0.97, y: 0 }}
+        transition={{ type: 'spring', stiffness: 400, damping: 20 }}
         disabled={isDisabled}
         className={cn(
-          'inline-flex items-center justify-center transition-colors duration-150',
+          'group inline-flex items-center justify-center transition-all duration-200 cursor-pointer',
           'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-forest focus-visible:ring-offset-2',
-          'disabled:opacity-50 disabled:cursor-not-allowed select-none',
+          'disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none select-none',
           variantStyles[variant],
           sizeStyles[size],
           className
@@ -85,13 +86,17 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
             />
           </svg>
         ) : leftIcon ? (
-          <span className="inline-flex shrink-0">{leftIcon}</span>
+          <span className="inline-flex shrink-0 transition-transform duration-200 group-hover:-translate-x-0.5">
+            {leftIcon}
+          </span>
         ) : null}
 
         <span>{children}</span>
 
         {!isLoading && rightIcon ? (
-          <span className="inline-flex shrink-0">{rightIcon}</span>
+          <span className="inline-flex shrink-0 transition-transform duration-200 group-hover:translate-x-1">
+            {rightIcon}
+          </span>
         ) : null}
       </motion.button>
     );
