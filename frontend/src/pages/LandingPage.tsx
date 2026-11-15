@@ -75,11 +75,11 @@ export const LandingPage: React.FC = () => {
       {/* =========================================================================
           1. HERO SECTION (Full-Bleed Screen Background with 4 Live Options)
          ========================================================================= */}
-      <section className="relative pt-24 pb-14 sm:pt-28 sm:pb-16 lg:pt-36 lg:pb-24 overflow-hidden min-h-screen flex flex-col justify-between">
+      <section className="relative isolate pt-24 pb-14 sm:pt-28 sm:pb-16 lg:pt-36 lg:pb-24 overflow-hidden min-h-screen flex flex-col justify-between">
         {/* Full-Bleed Dynamic Background */}
         <HeroBackground option={bgOption} />
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full z-10 flex-1 flex flex-col justify-center">
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full flex-1 flex flex-col justify-center">
           
           {/* Live Background Switcher Pill (High-Contrast Smoked Glass Dock) */}
           <div className="flex justify-center mb-6 sm:mb-8">
