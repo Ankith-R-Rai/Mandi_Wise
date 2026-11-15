@@ -58,4 +58,13 @@ python-service/build/
 # Temporary / Scratch files
 tmp/
 scratch/
+
+# Agent & Skills Tooling Configuration (Local Only)
+.agents/
+.superpowers/
+skills-lock.json
+
+# Project Tracking & Internal Logs (Local Only)
+Project_Tracking/
+
 .superpowers/
