@@ -75,18 +75,18 @@ export const LandingPage: React.FC = () => {
       {/* =========================================================================
           1. HERO SECTION (Full-Bleed Screen Background with 4 Live Options)
          ========================================================================= */}
-      <section className="relative pt-24 pb-14 sm:pt-28 sm:pb-16 lg:pt-32 lg:pb-20 overflow-hidden min-h-[92vh] flex flex-col justify-between">
+      <section className="relative pt-24 pb-14 sm:pt-28 sm:pb-16 lg:pt-36 lg:pb-24 overflow-hidden min-h-screen flex flex-col justify-between">
         {/* Full-Bleed Dynamic Background */}
         <HeroBackground option={bgOption} />
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full z-10 flex-1 flex flex-col justify-center">
           
-          {/* Live Background Switcher Pill (User can toggle between all 4 options live) */}
+          {/* Live Background Switcher Pill (High-Contrast Smoked Glass Dock) */}
           <div className="flex justify-center mb-6 sm:mb-8">
-            <div className="inline-flex flex-wrap items-center justify-center gap-1.5 p-1.5 bg-white/85 backdrop-blur-2xl border border-white/60 shadow-[0_8px_30px_rgb(0,0,0,0.08)] rounded-full">
-              <div className="flex items-center gap-1.5 px-3 py-1 text-xs font-bold text-forest">
-                <Sparkles className="w-3.5 h-3.5 text-accent-amber animate-spin" />
-                <span className="hidden sm:inline">Background Preview:</span>
+            <div className="inline-flex flex-wrap items-center justify-center gap-1.5 p-1.5 bg-[#06180F]/90 backdrop-blur-2xl border border-white/20 shadow-[0_15px_35px_rgba(0,0,0,0.3)] rounded-full">
+              <div className="flex items-center gap-1.5 px-3 py-1 text-xs font-bold text-amber-300">
+                <Sparkles className="w-3.5 h-3.5 text-amber-400 animate-spin" />
+                <span className="hidden sm:inline">Background Theme:</span>
                 <span className="sm:hidden">Theme:</span>
               </div>
               {[
@@ -101,8 +101,8 @@ export const LandingPage: React.FC = () => {
                   className={cn(
                     'px-3.5 py-1.5 text-xs font-semibold rounded-full transition-all duration-200 cursor-pointer select-none',
                     bgOption === opt.id
-                      ? 'bg-forest text-white shadow-md shadow-forest/25 scale-105'
-                      : 'text-surface-charcoal/80 hover:bg-forest-lightSage/70 hover:text-forest'
+                      ? 'bg-emerald-500 text-slate-950 font-bold shadow-md shadow-emerald-500/30 scale-105'
+                      : 'text-white/80 hover:bg-white/10 hover:text-white'
                   )}
                 >
                   {opt.label}
@@ -112,9 +112,9 @@ export const LandingPage: React.FC = () => {
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
-            {/* Left Column: Editorial Value Proposition */}
-            <div className="lg:col-span-6 space-y-6">
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/85 backdrop-blur-md border border-white/70 text-forest text-xs font-bold shadow-xs">
+            {/* Left Column: Editorial Value Proposition on Frosted Glass Island */}
+            <div className="lg:col-span-6 bg-white/90 backdrop-blur-2xl border border-white/80 p-6 sm:p-8 lg:p-9 rounded-3xl shadow-[0_20px_60px_rgba(0,0,0,0.18)] space-y-6">
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-forest-lightSage/70 border border-forest-sage/60 text-forest text-xs font-bold shadow-xs">
                 <span className="w-2 h-2 rounded-full bg-forest-fresh animate-pulse" />
                 <span>Karnataka Market Decision-Support Platform</span>
               </div>
@@ -157,15 +157,15 @@ export const LandingPage: React.FC = () => {
 
               {/* Trust Badge Indicators */}
               <div className="pt-2 flex flex-wrap items-center gap-3 text-xs font-medium text-surface-charcoal">
-                <div className="flex items-center gap-1.5 bg-white/75 backdrop-blur-sm px-3 py-1.5 rounded-full border border-white/60 shadow-xs">
+                <div className="flex items-center gap-1.5 bg-forest-lightSage/50 backdrop-blur-sm px-3 py-1.5 rounded-full border border-forest-sage/40 shadow-xs">
                   <CheckCircle2 className="w-4 h-4 text-forest-fresh" />
                   <span>AGMARKNET Official Records</span>
                 </div>
-                <div className="flex items-center gap-1.5 bg-white/75 backdrop-blur-sm px-3 py-1.5 rounded-full border border-white/60 shadow-xs">
+                <div className="flex items-center gap-1.5 bg-forest-lightSage/50 backdrop-blur-sm px-3 py-1.5 rounded-full border border-forest-sage/40 shadow-xs">
                   <CheckCircle2 className="w-4 h-4 text-forest-fresh" />
                   <span>Standardized INR / Quintal</span>
                 </div>
-                <div className="flex items-center gap-1.5 bg-white/75 backdrop-blur-sm px-3 py-1.5 rounded-full border border-white/60 shadow-xs">
+                <div className="flex items-center gap-1.5 bg-forest-lightSage/50 backdrop-blur-sm px-3 py-1.5 rounded-full border border-forest-sage/40 shadow-xs">
                   <CheckCircle2 className="w-4 h-4 text-forest-fresh" />
                   <span>Zero Price Hallucination</span>
                 </div>
