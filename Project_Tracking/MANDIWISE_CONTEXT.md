@@ -2,7 +2,7 @@
 
 > **Single Source of Truth for Session Continuity across Google Antigravity**  
 > *Last Updated:* 15 November 2026  
-> *Current Phase:* **Phase 0 Complete — Ready for Phase 1 (Environment & Supabase Setup)**
+> *Current Phase:* **Phase 1 Complete — Ready for Phase 2 (Data Feasibility & Research)**
 
 ---
 
@@ -82,9 +82,21 @@ $$\text{Estimated Net Earnings} = \text{Gross Revenue} - \text{Total Selling Exp
   - `Project_Tracking/DATABASE_SCHEMA.md`
   - `Project_Tracking/TESTING_STRATEGY.md`
 
-### Immediate Next Target: **Phase 1 (Environment & Supabase Setup)**
-* Establish `frontend/` (React + TypeScript + Tailwind CSS + Vite).
-* Establish `backend/` (Spring Boot 3.x with Maven Wrapper `./mvnw.cmd` and initial JPA/Flyway setup).
-* Establish `python-service/` (FastAPI baseline with health check).
-* Connect Spring Boot backend to `mandiwise-dev` Supabase PostgreSQL instance via JDBC with SSL.
-* Verify independent startup of all 3 services.
+### Phase 1: Environment & Supabase Setup — **COMPLETED**
+* [x] Established `frontend/` (React 18 + TypeScript + Vite + Tailwind CSS + Framer Motion).
+  - Built shell UI with Lucide icons, responsive layout, and nature-inspired palette.
+  - Verified build passes (`tsc -b && vite build`) in 13.17s.
+* [x] Established `backend/` (Spring Boot 3.3.5 with script-only Maven Wrapper `mvnw.cmd`).
+  - Configured PostgreSQL, Spring Data JPA, Spring Security, Validation, and Flyway.
+  - Implemented `ApiResponse<T>` envelope, `HealthController` (`/api/v1/health`), and `SecurityConfig`.
+  - Configured H2 in-memory test profile in `application-test.yml` and Supabase target in `application.yml`.
+  - Verified tests pass hermetically: `mvnw.cmd test` (2 tests, 0 failures, 0 errors in 50.8s).
+* [x] Established `python-service/` (FastAPI 0.163.1 + Uvicorn + Pandas + NumPy + Pytest).
+  - Implemented `/health` endpoint and CORS middleware.
+  - Configured `pytest.ini` and verified tests pass (`pytest tests`, 1 test passed in 1.01s).
+* [x] Verified Supabase PostgreSQL cloud database (`mandiwise-dev`, `ap-south-1`) via MCP (`list_tables` confirmed clean slate ready for Phase 3 Flyway migrations).
+
+### Immediate Next Target: **Phase 2 (Data Feasibility & Research)**
+* Research and ingest sample real Karnataka APMC market data (AGMARKNET / data.gov.in) for Tomato, Onion, Potato.
+* Define mandi and commodity attributes, data freshness threshold, and cleaning/validation logic.
+* Implement sample data ingestion and validation scripts in `python-service/` and verify data schemas.

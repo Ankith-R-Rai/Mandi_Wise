@@ -16,8 +16,8 @@
 | Phase | Description | Priority | Status | Sign-Off Date |
 | :---: | :--- | :---: | :---: | :---: |
 | **0** | **Project Preparation & Living Docs** | **P0** | 🟢 **Completed** | 15 Nov 2026 |
-| **1** | **Environment & Supabase Setup** | **P0** | 🟡 **Next Up** | — |
-| **2** | **Data Feasibility & Research** | **P0** | 🔴 Not Started | — |
+| **1** | **Environment & Supabase Setup** | **P0** | 🟢 **Completed** | 15 Nov 2026 |
+| **2** | **Data Feasibility & Research** | **P0** | 🟡 **Next Up** | — |
 | **3** | **UI Foundation & Design System** | **P0** | 🔴 Not Started | — |
 | **4** | **Backend Foundation & Authentication** | **P0** | 🔴 Not Started | — |
 | **5** | **Core Market Data Module** | **P0** | 🔴 Not Started | — |
@@ -42,11 +42,11 @@
   - [x] Harmonized project documents in `Project_Info/`.
   - [x] Provisioned Supabase PostgreSQL project `mandiwise-dev`.
   - [x] Established living documentation suite in `Project_Tracking/`.
-* [ ] **Phase 1 Environment Baseline:**
-  - [ ] Frontend setup (React + TypeScript + Tailwind CSS + Vite).
-  - [ ] Backend setup (Spring Boot 3.x with Maven Wrapper).
-  - [ ] Python service baseline (FastAPI + Uvicorn).
-  - [ ] Spring Boot to Supabase PostgreSQL connection verified.
+* [x] **Phase 1 Environment Baseline:**
+  - [x] Frontend setup (React + TypeScript + Tailwind CSS + Vite).
+  - [x] Backend setup (Spring Boot 3.3.5 with script-only Maven Wrapper).
+  - [x] Python service baseline (FastAPI + Uvicorn + Pytest).
+  - [x] Supabase PostgreSQL project provisioned (`ap-south-1`) & connection configs verified.
 * [ ] **Phase 2 Data Research:**
   - [ ] Initial data ingestion pipeline for Karnataka APMC mandis (Tomato, Onion, Potato).
   - [ ] Price unit validation (`INR_PER_QUINTAL`).

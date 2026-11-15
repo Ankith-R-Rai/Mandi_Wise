@@ -1,0 +1,1 @@
+# MandiWise Python Service Package
