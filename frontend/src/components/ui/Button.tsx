@@ -31,6 +31,7 @@ const sizeStyles: Record<ButtonSize, string> = {
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   (
     {
+      type = 'button',
       variant = 'primary',
       size = 'md',
       isLoading = false,
@@ -48,6 +49,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     return (
       <motion.button
         ref={ref}
+        type={type}
         whileTap={isDisabled ? undefined : { scale: 0.98 }}
         transition={{ type: 'spring', stiffness: 450, damping: 25 }}
         disabled={isDisabled}

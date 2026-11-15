@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { X } from 'lucide-react';
 import { cn } from '../../utils/cn';
@@ -29,20 +29,70 @@ export const Modal: React.FC<ModalProps> = ({
   className,
   maxWidth = 'md',
 }) => {
-  // Lock body scroll and handle Escape key
+  const dialogRef = useRef<HTMLDivElement>(null);
+  const previousActiveElement = useRef<HTMLElement | null>(null);
+
+  // Focus trap, focus restoration, body scroll lock, and Escape key listener
   useEffect(() => {
     if (!isOpen) return;
 
+    // Remember previous active element to restore focus on close
+    previousActiveElement.current = document.activeElement as HTMLElement | null;
+
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
+      if (e.key === 'Escape') {
+        onClose();
+        return;
+      }
+
+      // Trap Tab key within dialog
+      if (e.key === 'Tab' && dialogRef.current) {
+        const focusableElements = dialogRef.current.querySelectorAll<HTMLElement>(
+          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+        );
+        if (focusableElements.length === 0) return;
+
+        const firstElement = focusableElements[0];
+        const lastElement = focusableElements[focusableElements.length - 1];
+
+        if (e.shiftKey) {
+          if (document.activeElement === firstElement) {
+            e.preventDefault();
+            lastElement.focus();
+          }
+        } else {
+          if (document.activeElement === lastElement) {
+            e.preventDefault();
+            firstElement.focus();
+          }
+        }
+      }
     };
 
     document.body.style.overflow = 'hidden';
     window.addEventListener('keydown', handleKeyDown);
 
+    // Initial focus on mount
+    const timer = setTimeout(() => {
+      if (dialogRef.current) {
+        const focusable = dialogRef.current.querySelectorAll<HTMLElement>(
+          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+        );
+        if (focusable.length > 0) {
+          focusable[0].focus();
+        } else {
+          dialogRef.current.focus();
+        }
+      }
+    }, 50);
+
     return () => {
+      clearTimeout(timer);
       document.body.style.overflow = 'unset';
       window.removeEventListener('keydown', handleKeyDown);
+      if (previousActiveElement.current) {
+        previousActiveElement.current.focus();
+      }
     };
   }, [isOpen, onClose]);
 
@@ -63,6 +113,8 @@ export const Modal: React.FC<ModalProps> = ({
 
           {/* Modal Card Dialog */}
           <motion.div
+            ref={dialogRef}
+            tabIndex={-1}
             role="dialog"
             aria-modal="true"
             initial={{ opacity: 0, scale: 0.95, y: 10 }}
@@ -70,12 +122,12 @@ export const Modal: React.FC<ModalProps> = ({
             exit={{ opacity: 0, scale: 0.95, y: 10 }}
             transition={{ type: 'spring', stiffness: 400, damping: 28 }}
             className={cn(
-              'relative w-full bg-white rounded-2xl border border-surface-border shadow-xl z-10 overflow-hidden',
+              'relative w-full bg-white rounded-2xl border border-surface-border shadow-xl z-10 overflow-hidden outline-none',
               maxWidthMap[maxWidth],
               className
             )}
           >
-            {/* Header */}
+            {/* Header or Close Button */}
             {title ? (
               <div className="flex items-center justify-between p-5 pb-3 border-b border-surface-border">
                 <div>
@@ -94,7 +146,15 @@ export const Modal: React.FC<ModalProps> = ({
                   <X className="w-4 h-4" />
                 </button>
               </div>
-            ) : null}
+            ) : (
+              <button
+                onClick={onClose}
+                aria-label="Close dialog"
+                className="absolute top-3.5 right-3.5 p-1.5 rounded-lg text-surface-muted hover:text-surface-charcoal hover:bg-surface-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-forest z-10"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            )}
 
             {/* Body */}
             <div className="p-5">{children}</div>

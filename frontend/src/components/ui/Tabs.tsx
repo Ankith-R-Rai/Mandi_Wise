@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useId } from 'react';
 import { motion } from 'motion/react';
 import { cn } from '../../utils/cn';
 
@@ -13,6 +13,7 @@ export interface TabsProps {
   tabs: TabItem[];
   activeTab: string;
   onTabChange: (tabId: string) => void;
+  layoutId?: string;
   className?: string;
 }
 
@@ -20,8 +21,12 @@ export const Tabs: React.FC<TabsProps> = ({
   tabs,
   activeTab,
   onTabChange,
+  layoutId,
   className,
 }) => {
+  const generatedId = useId();
+  const activeLayoutId = layoutId || `tab-pill-${generatedId}`;
+
   return (
     <div
       role="tablist"
@@ -36,6 +41,7 @@ export const Tabs: React.FC<TabsProps> = ({
         return (
           <button
             key={tab.id}
+            type="button"
             role="tab"
             aria-selected={isActive}
             onClick={() => onTabChange(tab.id)}
@@ -48,7 +54,7 @@ export const Tabs: React.FC<TabsProps> = ({
           >
             {isActive ? (
               <motion.div
-                layoutId="activeTabPill"
+                layoutId={activeLayoutId}
                 className="absolute inset-0 bg-white rounded-lg shadow-sm border border-surface-border -z-10"
                 transition={{ type: 'spring', stiffness: 450, damping: 30 }}
               />

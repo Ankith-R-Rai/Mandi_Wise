@@ -22,6 +22,11 @@ export default {
           charcoal: '#26312B',
           darkCharcoal: '#18231D',
         },
+        accent: {
+          amber: '#D97706',
+          amberLight: '#FEF3C7',
+          warning: '#D99A32',
+        },
         semantic: {
           success: '#23845B',
           warning: '#D99A32',
