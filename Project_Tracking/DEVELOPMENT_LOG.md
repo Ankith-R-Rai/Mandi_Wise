@@ -111,6 +111,13 @@
     - Defaulted `Button.tsx` `type` to `'button'`.
     - Added `.no-scrollbar` utility to `index.css`.
   - Verified production build clean (`built in 13.31s` with 0 errors).
+* **Visual Polish & User Design Direction Finalization (`2ddc4be`):**
+  - Locked in the **Misty Western Ghats** landscape as the primary hero backdrop.
+  - Implemented an organic hillside Banyan/Neem tree silhouette with lush canopy layers and branches.
+  - Engineered 16 dynamic falling leaves with wind physics blowing directly off the tree's canopy and drifting across the valley on animated wind flow curves.
+  - Removed the temporary background switcher dock.
+  - Redesigned the floating navbar into a high-contrast Misty Ghats smoked liquid glass capsule (`bg-[#0A261A]/85 backdrop-blur-2xl border border-emerald-400/30`) with sliding emerald liquid tabs and warm harvest amber CTA.
+  - Harmonized the entire page palette (frosted glass cards, formula cards, market benchmark tables, and feature cards) with matching Misty Ghats emerald and sage tones.
 
 ### Engineering Decisions & Rationale
 1. **Vector Editorial Illustration over Heavy WebGL:** Chose a multi-layered SVG illustration with Framer Motion leaf particles instead of a 3D WebGL scene to guarantee instant 60fps performance on budget mobile phones without battery drain.
@@ -270,6 +277,13 @@
     - Defaulted `Button.tsx` `type` to `'button'`.
     - Added `.no-scrollbar` utility to `index.css`.
   - Verified production build clean (`built in 13.31s` with 0 errors).
+* **Visual Polish & User Design Direction Finalization (`2ddc4be`):**
+  - Locked in the **Misty Western Ghats** landscape as the primary hero backdrop.
+  - Implemented an organic hillside Banyan/Neem tree silhouette with lush canopy layers and branches.
+  - Engineered 16 dynamic falling leaves with wind physics blowing directly off the tree's canopy and drifting across the valley on animated wind flow curves.
+  - Removed the temporary background switcher dock.
+  - Redesigned the floating navbar into a high-contrast Misty Ghats smoked liquid glass capsule (`bg-[#0A261A]/85 backdrop-blur-2xl border border-emerald-400/30`) with sliding emerald liquid tabs and warm harvest amber CTA.
+  - Harmonized the entire page palette (frosted glass cards, formula cards, market benchmark tables, and feature cards) with matching Misty Ghats emerald and sage tones.
 
 ### Engineering Decisions & Rationale
 1. **Vector Editorial Illustration over Heavy WebGL:** Chose a multi-layered SVG illustration with Framer Motion leaf particles instead of a 3D WebGL scene to guarantee instant 60fps performance on budget mobile phones without battery drain.
