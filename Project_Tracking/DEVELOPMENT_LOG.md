@@ -103,6 +103,14 @@
   - Built `Footer.tsx` with brand details, monitored APMC hubs, official data attribution (AGMARKNET & data.gov.in), and net earnings advisory disclaimer.
   - Built `LandingPage.tsx` assembling hero, Net Earnings Formula breakdown, live Karnataka APMC price benchmark table with search & filter, feature highlights, and an interactive live testing showcase for all 11 UI components.
   - Mounted in `App.tsx` and verified full production build (`tsc -b && vite build` passed in 14.99s with 0 errors).
+* **Code Review Feedback & Polish Pass (`2d0febf`):**
+  - Dispatched Senior UI Code Reviewer. Addressed all findings:
+    - Added `accent` tokens (`amber`, `amberLight`, `warning`) to `tailwind.config.js`.
+    - Implemented keyboard focus trap (`Tab`/`Shift+Tab`) and focus restoration in `Modal.tsx`.
+    - Added `useId()` fallback to `layoutId` in `Tabs.tsx` to prevent cross-instance collision.
+    - Defaulted `Button.tsx` `type` to `'button'`.
+    - Added `.no-scrollbar` utility to `index.css`.
+  - Verified production build clean (`built in 13.31s` with 0 errors).
 
 ### Engineering Decisions & Rationale
 1. **Vector Editorial Illustration over Heavy WebGL:** Chose a multi-layered SVG illustration with Framer Motion leaf particles instead of a 3D WebGL scene to guarantee instant 60fps performance on budget mobile phones without battery drain.
@@ -254,6 +262,14 @@
   - Built `Footer.tsx` with brand details, monitored APMC hubs, official data attribution (AGMARKNET & data.gov.in), and net earnings advisory disclaimer.
   - Built `LandingPage.tsx` assembling hero, Net Earnings Formula breakdown, live Karnataka APMC price benchmark table with search & filter, feature highlights, and an interactive live testing showcase for all 11 UI components.
   - Mounted in `App.tsx` and verified full production build (`tsc -b && vite build` passed in 14.99s with 0 errors).
+* **Code Review Feedback & Polish Pass (`2d0febf`):**
+  - Dispatched Senior UI Code Reviewer. Addressed all findings:
+    - Added `accent` tokens (`amber`, `amberLight`, `warning`) to `tailwind.config.js`.
+    - Implemented keyboard focus trap (`Tab`/`Shift+Tab`) and focus restoration in `Modal.tsx`.
+    - Added `useId()` fallback to `layoutId` in `Tabs.tsx` to prevent cross-instance collision.
+    - Defaulted `Button.tsx` `type` to `'button'`.
+    - Added `.no-scrollbar` utility to `index.css`.
+  - Verified production build clean (`built in 13.31s` with 0 errors).
 
 ### Engineering Decisions & Rationale
 1. **Vector Editorial Illustration over Heavy WebGL:** Chose a multi-layered SVG illustration with Framer Motion leaf particles instead of a 3D WebGL scene to guarantee instant 60fps performance on budget mobile phones without battery drain.
