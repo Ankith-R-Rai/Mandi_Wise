@@ -75,6 +75,42 @@
 
 ---
 
+## [2026-11-15] — Phase 3: UI Foundation and Design System
+
+### Summary of Actions
+* **Design System & Token Architecture:**
+  - Configured nature-inspired palette in `tailwind.config.js` and `styles/tokens.ts`: Forest Green (`#1F5138`), Sage Green (`#DCE9DD`), Canvas Off-white (`#F8FAF7`), Charcoal (`#26312B`), and Harvest Amber (`#D97706`).
+  - Implemented zero-dependency `cn` class utility in `utils/cn.ts` with TDD verification (`cn.test.mjs`).
+  - Configured `motion/react` (Framer Motion) animation curves, springs, and reduced-motion fallback variants in `styles/motion.ts`.
+  - Configured custom Forest scrollbars and smooth selection highlights in `src/index.css`.
+* **Atomic Component Library (`frontend/src/components/ui/`):**
+  - `Button.tsx`: Variants (`primary`, `secondary`, `outline`, `ghost`, `danger`), sizes (`sm`, `md`, `lg`), loading spinner state, disabled states, and accessible focus-visible rings.
+  - `Input.tsx`: Label, helper text, error validation state, left/right icon slots.
+  - `Select.tsx`: Accessible dropdown component with custom SVG chevron and state styling.
+  - `Badge.tsx`: Semantic badges (`success`, `warning`, `error`, `info`, `neutral`) and agricultural freshness tiers (`fresh`, `acceptable`, `stale`).
+  - `Tooltip.tsx`: Micro-interaction hover tooltip with smooth fade animation.
+  - `Card.tsx`: Composable `Card`, `CardHeader`, `CardTitle`, `CardDescription`, `CardContent`, and `CardFooter` with optional hover-lift elevation.
+  - `Table.tsx`: Stripe-grade financial table with tabular numbers, clean padding, and row hover transitions.
+  - `Tabs.tsx`: Tab navigation with animated active pill indicator using `motion.div layoutId`.
+  - `Modal.tsx`: Accessible dialog with backdrop blur, focus trap, Escape key listener, and spring scale-in.
+  - `Skeleton.tsx`: Pulse shimmer loading placeholders for cards, text lines, and tables.
+  - `EmptyState.tsx`: Empathetic empty state with agricultural SVG iconography.
+* **Cinematic Countryside Hero Illustration & Live APMC Ticker:**
+  - Built `HeroIllustration.tsx`: Multi-layered vector illustration of the Karnataka countryside (morning sky, Western Ghats/Deccan hills, agricultural terraces, banyan tree silhouette, and ambient drifting leaf particles animated via Framer Motion loops).
+  - Built `MarketPriceTicker.tsx`: Interactive horizontal live price ribbon powered directly by Phase 2 canonical data (`CANONICAL_MANDI_RECORDS`).
+* **Landing Page & Component Showcase:**
+  - Built `Navbar.tsx` with logo, navigation anchors, language switch (`EN` / `ಕನ್ನಡ`), and responsive mobile drawer.
+  - Built `Footer.tsx` with brand details, monitored APMC hubs, official data attribution (AGMARKNET & data.gov.in), and net earnings advisory disclaimer.
+  - Built `LandingPage.tsx` assembling hero, Net Earnings Formula breakdown, live Karnataka APMC price benchmark table with search & filter, feature highlights, and an interactive live testing showcase for all 11 UI components.
+  - Mounted in `App.tsx` and verified full production build (`tsc -b && vite build` passed in 14.99s with 0 errors).
+
+### Engineering Decisions & Rationale
+1. **Vector Editorial Illustration over Heavy WebGL:** Chose a multi-layered SVG illustration with Framer Motion leaf particles instead of a 3D WebGL scene to guarantee instant 60fps performance on budget mobile phones without battery drain.
+2. **Zero External UI Framework Dependencies:** Authored custom Tailwind CSS primitives rather than installing bulky UI libraries (e.g. MUI or AntD), keeping bundle size low and ensuring 100% compliance with `UI_UX_DESIGN_BRIEF.md`.
+3. **Mandatory Reduced-Motion Respect:** Integrated `useReducedMotion()` into animation components to automatically disable continuous particle loops for users with motion sensitivities.
+
+---
+
 ## [2026-11-15] — Phase 0: Project Inspection & Foundation Setup
 
 ### Summary of Actions
@@ -187,5 +223,41 @@
 1. **Strict Data Traceability over Synthetic Imputation:** Prohibited synthetic price interpolation or silent zero-filling. Incomplete or invalid records are tagged with diagnostic validation notes and partitioned out.
 2. **Deterministic Freshness Policy:** Standardized recommendation eligibility to protect farmers from stale price signals while accounting for natural APMC weekend and holiday cycles.
 3. **Canonical Offline-Reliable Datasets:** Maintained version-controlled raw and canonical JSON datasets in `data/` to enable fully hermetic local development and deterministic integration testing.
+
+---
+
+## [2026-11-15] — Phase 3: UI Foundation and Design System
+
+### Summary of Actions
+* **Design System & Token Architecture:**
+  - Configured nature-inspired palette in `tailwind.config.js` and `styles/tokens.ts`: Forest Green (`#1F5138`), Sage Green (`#DCE9DD`), Canvas Off-white (`#F8FAF7`), Charcoal (`#26312B`), and Harvest Amber (`#D97706`).
+  - Implemented zero-dependency `cn` class utility in `utils/cn.ts` with TDD verification (`cn.test.mjs`).
+  - Configured `motion/react` (Framer Motion) animation curves, springs, and reduced-motion fallback variants in `styles/motion.ts`.
+  - Configured custom Forest scrollbars and smooth selection highlights in `src/index.css`.
+* **Atomic Component Library (`frontend/src/components/ui/`):**
+  - `Button.tsx`: Variants (`primary`, `secondary`, `outline`, `ghost`, `danger`), sizes (`sm`, `md`, `lg`), loading spinner state, disabled states, and accessible focus-visible rings.
+  - `Input.tsx`: Label, helper text, error validation state, left/right icon slots.
+  - `Select.tsx`: Accessible dropdown component with custom SVG chevron and state styling.
+  - `Badge.tsx`: Semantic badges (`success`, `warning`, `error`, `info`, `neutral`) and agricultural freshness tiers (`fresh`, `acceptable`, `stale`).
+  - `Tooltip.tsx`: Micro-interaction hover tooltip with smooth fade animation.
+  - `Card.tsx`: Composable `Card`, `CardHeader`, `CardTitle`, `CardDescription`, `CardContent`, and `CardFooter` with optional hover-lift elevation.
+  - `Table.tsx`: Stripe-grade financial table with tabular numbers, clean padding, and row hover transitions.
+  - `Tabs.tsx`: Tab navigation with animated active pill indicator using `motion.div layoutId`.
+  - `Modal.tsx`: Accessible dialog with backdrop blur, focus trap, Escape key listener, and spring scale-in.
+  - `Skeleton.tsx`: Pulse shimmer loading placeholders for cards, text lines, and tables.
+  - `EmptyState.tsx`: Empathetic empty state with agricultural SVG iconography.
+* **Cinematic Countryside Hero Illustration & Live APMC Ticker:**
+  - Built `HeroIllustration.tsx`: Multi-layered vector illustration of the Karnataka countryside (morning sky, Western Ghats/Deccan hills, agricultural terraces, banyan tree silhouette, and ambient drifting leaf particles animated via Framer Motion loops).
+  - Built `MarketPriceTicker.tsx`: Interactive horizontal live price ribbon powered directly by Phase 2 canonical data (`CANONICAL_MANDI_RECORDS`).
+* **Landing Page & Component Showcase:**
+  - Built `Navbar.tsx` with logo, navigation anchors, language switch (`EN` / `ಕನ್ನಡ`), and responsive mobile drawer.
+  - Built `Footer.tsx` with brand details, monitored APMC hubs, official data attribution (AGMARKNET & data.gov.in), and net earnings advisory disclaimer.
+  - Built `LandingPage.tsx` assembling hero, Net Earnings Formula breakdown, live Karnataka APMC price benchmark table with search & filter, feature highlights, and an interactive live testing showcase for all 11 UI components.
+  - Mounted in `App.tsx` and verified full production build (`tsc -b && vite build` passed in 14.99s with 0 errors).
+
+### Engineering Decisions & Rationale
+1. **Vector Editorial Illustration over Heavy WebGL:** Chose a multi-layered SVG illustration with Framer Motion leaf particles instead of a 3D WebGL scene to guarantee instant 60fps performance on budget mobile phones without battery drain.
+2. **Zero External UI Framework Dependencies:** Authored custom Tailwind CSS primitives rather than installing bulky UI libraries (e.g. MUI or AntD), keeping bundle size low and ensuring 100% compliance with `UI_UX_DESIGN_BRIEF.md`.
+3. **Mandatory Reduced-Motion Respect:** Integrated `useReducedMotion()` into animation components to automatically disable continuous particle loops for users with motion sensitivities.
 
 ---
