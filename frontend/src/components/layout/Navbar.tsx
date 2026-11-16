@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Menu, X, Sprout, ArrowRight } from 'lucide-react';
+import { Menu, X, Sprout, ArrowRight, Globe } from 'lucide-react';
 import { Button } from '../ui/Button';
 import { cn } from '../../utils/cn';
 
@@ -100,10 +100,11 @@ export const Navbar: React.FC<NavbarProps> = ({ onNavigateSection }) => {
           {/* Language Switcher Pill */}
           <button
             onClick={() => setCurrentLang(currentLang === 'EN' ? 'KN' : 'EN')}
-            className="text-xs font-semibold px-3 py-1.5 rounded-full border border-white/20 bg-white/10 text-white/90 hover:bg-white/20 hover:text-white transition-all duration-200 shadow-xs cursor-pointer"
+            className="flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-full border border-white/20 bg-white/10 text-white/90 hover:bg-white/20 hover:text-white transition-all duration-200 shadow-xs cursor-pointer"
             title="Toggle Language"
           >
-            {currentLang === 'EN' ? '🌐 KN' : '🌐 EN'}
+            <Globe className="w-3.5 h-3.5 opacity-80" />
+            <span>{currentLang === 'EN' ? 'KN' : 'EN'}</span>
           </button>
 
           <Button

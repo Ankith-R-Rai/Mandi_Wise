@@ -1,5 +1,6 @@
 import React from 'react';
 import { Badge } from '../ui/Badge';
+import { CommodityIcon } from '../ui/CommodityIcon';
 import { CANONICAL_MANDI_RECORDS, type CanonicalPriceRecord } from '../../data/canonicalMandiData';
 import { cn } from '../../utils/cn';
 
@@ -7,12 +8,6 @@ export interface MarketPriceTickerProps {
   onSelectRecord?: (record: CanonicalPriceRecord) => void;
   className?: string;
 }
-
-const commodityIcons: Record<string, string> = {
-  Tomato: '🍅',
-  Onion: '🧅',
-  Potato: '🥔',
-};
 
 export const MarketPriceTicker: React.FC<MarketPriceTickerProps> = ({
   onSelectRecord,
@@ -42,7 +37,6 @@ export const MarketPriceTicker: React.FC<MarketPriceTickerProps> = ({
         {/* Ticker Scroll Items Container */}
         <div className="flex items-center gap-6 overflow-x-auto no-scrollbar scroll-smooth">
           {tickerRecords.map((item, index) => {
-            const icon = commodityIcons[item.commodity] || '🌾';
             const formattedPrice = new Intl.NumberFormat('en-IN', {
               style: 'currency',
               currency: 'INR',
@@ -54,11 +48,13 @@ export const MarketPriceTicker: React.FC<MarketPriceTickerProps> = ({
                 key={`${item.commodity}-${item.market}-${index}`}
                 onClick={() => onSelectRecord?.(item)}
                 className={cn(
-                  'flex items-center gap-2 shrink-0 text-left py-1.5 px-3 rounded-lg transition-all duration-200 cursor-pointer select-none',
+                  'flex items-center gap-2.5 shrink-0 text-left py-1.5 px-3 rounded-lg transition-all duration-200 cursor-pointer select-none',
                   'hover:bg-forest-lightSage/90 hover:scale-105 hover:shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-forest text-xs'
                 )}
               >
-                <span className="text-base select-none">{icon}</span>
+                <div className="w-6 h-6 rounded-md bg-forest-lightSage flex items-center justify-center shrink-0 border border-forest-sage/40">
+                  <CommodityIcon commodity={item.commodity} size={15} />
+                </div>
 
                 <div>
                   <div className="flex items-center gap-1.5 font-semibold text-surface-darkCharcoal">

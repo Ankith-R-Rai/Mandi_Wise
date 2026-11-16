@@ -10,7 +10,12 @@ import {
   Camera,
   HelpCircle,
   Scale,
+  MapPin,
+  Building2,
+  AlertTriangle,
+  Pin,
 } from 'lucide-react';
+import { CommodityIcon } from '../components/ui/CommodityIcon';
 import { HeroBackground } from '../components/hero/HeroBackground';
 import { MarketPriceTicker } from '../components/hero/MarketPriceTicker';
 import { Button } from '../components/ui/Button';
@@ -175,7 +180,9 @@ export const LandingPage: React.FC = () => {
                     <div className="p-4 rounded-2xl bg-[#0F3827]/70 border border-emerald-400/40 shadow-sm transition-all duration-200 hover:scale-[1.01] hover:border-emerald-300/60">
                       <div className="flex items-center justify-between mb-2">
                         <div className="flex items-center gap-2">
-                          <span className="text-base">📍</span>
+                          <div className="w-6 h-6 rounded-lg bg-emerald-500/20 border border-emerald-400/30 flex items-center justify-center shrink-0">
+                            <MapPin className="w-3.5 h-3.5 text-emerald-400" />
+                          </div>
                           <span className="font-bold text-sm text-white">
                             Kolar APMC (12 km)
                           </span>
@@ -204,7 +211,9 @@ export const LandingPage: React.FC = () => {
                     <div className="p-4 rounded-2xl bg-black/25 border border-white/10 shadow-sm transition-all duration-200 hover:scale-[1.01]">
                       <div className="flex items-center justify-between mb-2">
                         <div className="flex items-center gap-2">
-                          <span className="text-base">🏙️</span>
+                          <div className="w-6 h-6 rounded-lg bg-white/10 border border-white/15 flex items-center justify-center shrink-0">
+                            <Building2 className="w-3.5 h-3.5 text-white/80" />
+                          </div>
                           <span className="font-semibold text-sm text-white/90">
                             Yeshwanthpur APMC (88 km)
                           </span>
@@ -377,9 +386,12 @@ export const LandingPage: React.FC = () => {
                     <span className="text-surface-darkCharcoal">₹51,800</span>
                   </div>
                 </div>
-                <p className="text-[11px] text-amber-800 bg-amber-50 p-2.5 rounded-lg mt-3 border border-amber-200/60">
-                  ⚠️ Farmer loses <strong>₹2,000 in net profit</strong> by traveling to Bangalore despite the ₹200 higher headline price.
-                </p>
+                <div className="flex items-start gap-2 text-[11px] text-amber-800 bg-amber-50 p-2.5 rounded-lg mt-3 border border-amber-200/60">
+                  <AlertTriangle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
+                  <span>
+                    Farmer loses <strong>₹2,000 in net profit</strong> by traveling to Bangalore despite the ₹200 higher headline price.
+                  </span>
+                </div>
               </div>
             </div>
           </div>
@@ -411,13 +423,14 @@ export const LandingPage: React.FC = () => {
                   key={comm}
                   onClick={() => setSelectedCommodity(comm)}
                   className={cn(
-                    'px-3.5 py-1.5 text-xs font-semibold rounded-xl transition-all duration-200 cursor-pointer select-none',
+                    'flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-semibold rounded-xl transition-all duration-200 cursor-pointer select-none',
                     selectedCommodity === comm
                       ? 'bg-forest text-white shadow-sm shadow-forest/25 scale-105'
                       : 'text-surface-charcoal hover:bg-forest-lightSage hover:text-forest'
                   )}
                 >
-                  {comm === 'Tomato' ? '🍅 Tomato' : comm === 'Onion' ? '🧅 Onion' : comm === 'Potato' ? '🥔 Potato' : 'All Crops'}
+                  {comm !== 'All' && <CommodityIcon commodity={comm} size={14} />}
+                  <span>{comm === 'All' ? 'All Crops' : comm}</span>
                 </button>
               ))}
             </div>
@@ -441,8 +454,10 @@ export const LandingPage: React.FC = () => {
           {/* Selected Ticker Highlight Banner */}
           {selectedRecord && (
             <div className="mb-4 p-3.5 bg-forest-lightSage border border-forest-sage rounded-2xl flex items-center justify-between text-xs shadow-xs">
-              <div className="flex items-center gap-2">
-                <span className="text-base">📌</span>
+              <div className="flex items-center gap-2.5">
+                <div className="w-6 h-6 rounded-md bg-forest-sage/40 flex items-center justify-center shrink-0">
+                  <Pin className="w-3.5 h-3.5 text-forest-deep" />
+                </div>
                 <span className="text-forest-deep">
                   Filtered by ticker selection: <strong>{selectedRecord.commodity} ({selectedRecord.variety})</strong> at <strong>{selectedRecord.market}</strong> &bull; Modal Price: <strong>{formatCurrency(selectedRecord.modal_price)}/quintal</strong>
                 </span>
@@ -478,8 +493,13 @@ export const LandingPage: React.FC = () => {
               {filteredRecords.map((item, idx) => (
                 <TableRow key={`${item.commodity}-${item.market}-${idx}`} className="hover:bg-emerald-50/70">
                   <TableCell className="font-semibold text-surface-darkCharcoal">
-                    {item.commodity === 'Tomato' ? '🍅' : item.commodity === 'Onion' ? '🧅' : '🥔'} {item.commodity}{' '}
-                    <span className="text-xs font-normal text-surface-muted">({item.variety})</span>
+                    <div className="flex items-center gap-2">
+                      <CommodityIcon commodity={item.commodity} size={15} />
+                      <span>
+                        {item.commodity}{' '}
+                        <span className="text-xs font-normal text-surface-muted">({item.variety})</span>
+                      </span>
+                    </div>
                   </TableCell>
                   <TableCell className="font-medium text-forest">{item.market}</TableCell>
                   <TableCell className="text-surface-muted">{item.district}</TableCell>

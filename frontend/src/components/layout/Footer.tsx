@@ -1,5 +1,6 @@
 import React from 'react';
 import { Sprout, ShieldCheck, Database, MapPin } from 'lucide-react';
+import { CommodityIcon } from '../ui/CommodityIcon';
 
 export const Footer: React.FC = () => {
   return (
@@ -29,9 +30,18 @@ export const Footer: React.FC = () => {
               Baseline Commodities
             </h4>
             <ul className="space-y-2 text-xs text-gray-300">
-              <li className="flex items-center gap-2">🍅 Tomato (Hybrid & Local)</li>
-              <li className="flex items-center gap-2">🧅 Onion (Red & Bellary)</li>
-              <li className="flex items-center gap-2">🥔 Potato (Jyoti & Local)</li>
+              <li className="flex items-center gap-2">
+                <CommodityIcon commodity="Tomato" size={14} />
+                <span>Tomato (Hybrid & Local)</span>
+              </li>
+              <li className="flex items-center gap-2">
+                <CommodityIcon commodity="Onion" size={14} />
+                <span>Onion (Red & Bellary)</span>
+              </li>
+              <li className="flex items-center gap-2">
+                <CommodityIcon commodity="Potato" size={14} />
+                <span>Potato (Jyoti & Local)</span>
+              </li>
             </ul>
           </div>
 
