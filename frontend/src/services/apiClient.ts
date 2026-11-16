@@ -8,7 +8,20 @@ export const apiClient = axios.create({
   timeout: 15000,
 });
 
-// Response interceptor for unified error unwrapping
+// Request interceptor: dynamically attach JWT bearer token if present
+apiClient.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem('mandiwise_auth_token');
+    if (token) {
+      config.headers = config.headers || {};
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
+
+// Response interceptor: unwraps error messages cleanly
 apiClient.interceptors.response.use(
   (response) => response,
   (error) => {

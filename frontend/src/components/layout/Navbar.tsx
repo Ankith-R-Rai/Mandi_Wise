@@ -1,14 +1,19 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Menu, X, Sprout, ArrowRight, Globe } from 'lucide-react';
+import { Menu, X, Sprout, ArrowRight, Globe, LogIn, LogOut, User as UserIcon } from 'lucide-react';
 import { Button } from '../ui/Button';
 import { cn } from '../../utils/cn';
+import { useAuth } from '../../context/AuthContext';
+import { AuthModal } from '../auth/AuthModal';
 
 export interface NavbarProps {
   onNavigateSection?: (sectionId: string) => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({ onNavigateSection }) => {
+  const { user, isAuthenticated, logout } = useAuth();
+  const [authModalOpen, setAuthModalOpen] = useState(false);
+  const [authModalMode, setAuthModalMode] = useState<'login' | 'register'>('login');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [currentLang, setCurrentLang] = useState<'EN' | 'KN'>('EN');
   const [activeNav, setActiveNav] = useState<string>('benchmarks');
@@ -116,6 +121,39 @@ export const Navbar: React.FC<NavbarProps> = ({ onNavigateSection }) => {
             UI Kit
           </Button>
 
+          {/* User Profile or Sign In CTA */}
+          {isAuthenticated && user ? (
+            <div className="flex items-center gap-2 bg-emerald-950/60 border border-emerald-400/35 rounded-full px-3 py-1 text-xs shadow-xs">
+              <div className="w-5 h-5 rounded-full bg-emerald-500/30 flex items-center justify-center text-emerald-300">
+                <UserIcon className="w-3 h-3" />
+              </div>
+              <span className="font-semibold text-white max-w-[110px] truncate">
+                {user.fullName.split(' ')[0]}
+              </span>
+              <button
+                type="button"
+                onClick={logout}
+                title="Sign out"
+                className="text-white/60 hover:text-red-300 transition-colors ml-1 p-0.5 cursor-pointer"
+              >
+                <LogOut className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          ) : (
+            <Button
+              variant="outline"
+              size="sm"
+              className="rounded-full bg-white/10 hover:bg-white/20 text-white border-white/25 shadow-xs"
+              onClick={() => {
+                setAuthModalMode('login');
+                setAuthModalOpen(true);
+              }}
+              leftIcon={<LogIn className="w-3.5 h-3.5" />}
+            >
+              Sign In
+            </Button>
+          )}
+
           <Button
             size="sm"
             className="rounded-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-bold border-0 shadow-lg shadow-amber-500/30"
@@ -164,7 +202,39 @@ export const Navbar: React.FC<NavbarProps> = ({ onNavigateSection }) => {
                 {link.label}
               </button>
             ))}
+            
             <div className="pt-2 flex flex-col gap-2">
+              {isAuthenticated && user ? (
+                <div className="flex items-center justify-between p-3 bg-black/30 rounded-xl border border-white/10 text-xs text-white">
+                  <div className="flex items-center gap-2">
+                    <UserIcon className="w-4 h-4 text-emerald-400" />
+                    <span>{user.fullName}</span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={logout}
+                    className="text-red-400 hover:text-red-300 font-semibold flex items-center gap-1 cursor-pointer"
+                  >
+                    <LogOut className="w-3.5 h-3.5" />
+                    <span>Sign Out</span>
+                  </button>
+                </div>
+              ) : (
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="w-full justify-center rounded-xl bg-white/10 text-white border-white/20"
+                  onClick={() => {
+                    setMobileMenuOpen(false);
+                    setAuthModalMode('login');
+                    setAuthModalOpen(true);
+                  }}
+                  leftIcon={<LogIn className="w-3.5 h-3.5" />}
+                >
+                  Sign In / Join
+                </Button>
+              )}
+
               <Button
                 size="sm"
                 className="w-full justify-center rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 font-bold border-0"
@@ -176,6 +246,13 @@ export const Navbar: React.FC<NavbarProps> = ({ onNavigateSection }) => {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Auth Modal */}
+      <AuthModal
+        isOpen={authModalOpen}
+        onClose={() => setAuthModalOpen(false)}
+        defaultMode={authModalMode}
+      />
     </header>
   );
 };
