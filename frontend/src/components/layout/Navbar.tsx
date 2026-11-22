@@ -8,9 +8,10 @@ import { AuthModal } from '../auth/AuthModal';
 
 export interface NavbarProps {
   onNavigateSection?: (sectionId: string) => void;
+  onOpenAuth?: (mode?: 'login' | 'register') => void;
 }
 
-export const Navbar: React.FC<NavbarProps> = ({ onNavigateSection }) => {
+export const Navbar: React.FC<NavbarProps> = ({ onNavigateSection, onOpenAuth }) => {
   const { user, isAuthenticated, logout } = useAuth();
   const [authModalOpen, setAuthModalOpen] = useState(false);
   const [authModalMode, setAuthModalMode] = useState<'login' | 'register'>('login');
@@ -18,6 +19,15 @@ export const Navbar: React.FC<NavbarProps> = ({ onNavigateSection }) => {
   const [currentLang, setCurrentLang] = useState<'EN' | 'KN'>('EN');
   const [activeNav, setActiveNav] = useState<string>('benchmarks');
   const [hoveredNav, setHoveredNav] = useState<string | null>(null);
+
+  const handleOpenAuth = (mode: 'login' | 'register' = 'login') => {
+    if (onOpenAuth) {
+      onOpenAuth(mode);
+    } else {
+      setAuthModalMode(mode);
+      setAuthModalOpen(true);
+    }
+  };
 
   const navLinks = [
     { label: 'Market Prices', id: 'benchmarks' },
@@ -37,7 +47,8 @@ export const Navbar: React.FC<NavbarProps> = ({ onNavigateSection }) => {
   };
 
   return (
-    <header className="fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[95%] max-w-5xl">
+    <>
+      <header className="fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[95%] max-w-5xl">
       {/* Misty Ghats Smoked Liquid Glass Pill Bar */}
       <div className="relative bg-[#0A261A]/85 backdrop-blur-2xl border border-emerald-400/30 rounded-full shadow-[0_18px_45px_rgba(5,26,17,0.4),inset_0_1px_1.5px_rgba(255,255,255,0.4),inset_0_-1px_1px_rgba(0,0,0,0.6)] px-4 sm:px-6 py-2.5 flex items-center justify-between transition-all duration-300">
         
@@ -144,10 +155,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onNavigateSection }) => {
               variant="outline"
               size="sm"
               className="rounded-full bg-white/10 hover:bg-white/20 text-white border-white/25 shadow-xs"
-              onClick={() => {
-                setAuthModalMode('login');
-                setAuthModalOpen(true);
-              }}
+              onClick={() => handleOpenAuth('login')}
               leftIcon={<LogIn className="w-3.5 h-3.5" />}
             >
               Sign In
@@ -226,8 +234,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onNavigateSection }) => {
                   className="w-full justify-center rounded-xl bg-white/10 text-white border-white/20"
                   onClick={() => {
                     setMobileMenuOpen(false);
-                    setAuthModalMode('login');
-                    setAuthModalOpen(true);
+                    handleOpenAuth('login');
                   }}
                   leftIcon={<LogIn className="w-3.5 h-3.5" />}
                 >
@@ -246,13 +253,14 @@ export const Navbar: React.FC<NavbarProps> = ({ onNavigateSection }) => {
           </motion.div>
         )}
       </AnimatePresence>
-
-      {/* Auth Modal */}
-      <AuthModal
-        isOpen={authModalOpen}
-        onClose={() => setAuthModalOpen(false)}
-        defaultMode={authModalMode}
-      />
     </header>
-  );
+
+    {/* Auth Modal (Rendered outside header to guarantee full viewport bounds) */}
+    <AuthModal
+      isOpen={authModalOpen}
+      onClose={() => setAuthModalOpen(false)}
+      defaultMode={authModalMode}
+    />
+  </>
+);
 };
