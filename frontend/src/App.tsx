@@ -5,6 +5,7 @@ import { Navbar } from './components/layout/Navbar';
 import { LandingPage } from './pages/LandingPage';
 import { RecommendationsPage } from './pages/RecommendationsPage';
 import { MarketPricesPage } from './pages/MarketPricesPage';
+import { PriceTrendsPage } from './pages/PriceTrendsPage';
 import { NetEarningsAxiomPage } from './pages/NetEarningsAxiomPage';
 import { AuthPage } from './pages/AuthPage';
 import { Footer } from './components/layout/Footer';
@@ -49,6 +50,7 @@ function AppContent() {
           <Route path="/" element={<LandingPage />} />
           <Route path="/recommendations" element={<RecommendationsPage />} />
           <Route path="/market-prices" element={<MarketPricesPage />} />
+          <Route path="/price-trends" element={<PriceTrendsPage />} />
           <Route path="/net-earnings-axiom" element={<NetEarningsAxiomPage />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>

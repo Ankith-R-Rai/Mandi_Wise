@@ -34,6 +34,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenAuth }) => {
   const navLinks = [
     { label: 'Recommendations', path: '/recommendations' },
     { label: 'Market Prices', path: '/market-prices' },
+    { label: 'Price Trends', path: '/price-trends' },
     { label: 'Net Earnings Axiom', path: '/net-earnings-axiom' },
   ];
 

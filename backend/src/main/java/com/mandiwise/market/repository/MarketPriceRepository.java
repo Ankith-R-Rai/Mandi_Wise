@@ -38,4 +38,26 @@ public interface MarketPriceRepository extends JpaRepository<MarketPrice, UUID>,
 
     @Query("SELECT MIN(mp.observationDate) FROM MarketPrice mp")
     LocalDate findOldestObservationDate();
+
+    @Query("SELECT mp FROM MarketPrice mp JOIN FETCH mp.commodity c JOIN FETCH mp.market m " +
+           "WHERE mp.commodity.id = :commodityId " +
+           "AND mp.market.id IN :marketIds " +
+           "AND mp.observationDate BETWEEN :startDate AND :endDate " +
+           "ORDER BY mp.observationDate ASC")
+    List<MarketPrice> findHistoricalSeriesForMarkets(
+            @Param("commodityId") UUID commodityId,
+            @Param("marketIds") List<UUID> marketIds,
+            @Param("startDate") LocalDate startDate,
+            @Param("endDate") LocalDate endDate
+    );
+
+    @Query("SELECT mp FROM MarketPrice mp JOIN FETCH mp.commodity c JOIN FETCH mp.market m " +
+           "WHERE mp.commodity.id = :commodityId " +
+           "AND mp.observationDate BETWEEN :startDate AND :endDate " +
+           "ORDER BY mp.observationDate ASC")
+    List<MarketPrice> findHistoricalSeriesForAllMarkets(
+            @Param("commodityId") UUID commodityId,
+            @Param("startDate") LocalDate startDate,
+            @Param("endDate") LocalDate endDate
+    );
 }
