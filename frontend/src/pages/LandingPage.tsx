@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { motion } from 'motion/react';
 import { useNavigate } from 'react-router-dom';
 import {
   ArrowRight,
@@ -8,10 +7,6 @@ import {
   CheckCircle2,
   BarChart3,
   Camera,
-  HelpCircle,
-  Scale,
-  MapPin,
-  Building2,
   AlertTriangle,
 } from 'lucide-react';
 import { HeroBackground } from '../components/hero/HeroBackground';
@@ -25,7 +20,6 @@ import { Select } from '../components/ui/Select';
 import { Modal } from '../components/ui/Modal';
 import { Tabs } from '../components/ui/Tabs';
 import { Skeleton } from '../components/ui/Skeleton';
-import { Tooltip } from '../components/ui/Tooltip';
 
 export const LandingPage: React.FC = () => {
   const navigate = useNavigate();
@@ -47,170 +41,57 @@ export const LandingPage: React.FC = () => {
         {/* Full-Bleed Misty Western Ghats Background with Tree & Falling Leaves */}
         <HeroBackground />
 
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full flex-1 flex flex-col justify-center">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
-            
-            {/* Left Column: Editorial Value Proposition on Frosted Misty Glass Island */}
-            <div className="lg:col-span-6 bg-white/92 backdrop-blur-2xl border border-emerald-900/10 p-6 sm:p-8 lg:p-10 rounded-3xl shadow-[0_20px_60px_rgba(11,42,29,0.22)] space-y-6">
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-forest-lightSage/80 border border-forest-sage/60 text-forest text-xs font-bold shadow-xs">
-                <span className="w-2 h-2 rounded-full bg-forest-fresh animate-pulse" />
-                <span>Karnataka Market Decision-Support Platform</span>
-              </div>
-
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-surface-darkCharcoal tracking-tight leading-[1.12]">
-                Make every <br />
-                <span className="text-surface-darkCharcoal">harvest count.</span>
-              </h1>
-
-              <p className="text-base sm:text-lg text-surface-charcoal/90 leading-relaxed max-w-xl font-medium">
-                The highest mandi price doesn’t guarantee the highest profit. MandiWise calculates your <strong>true expected net earnings</strong> after real transport and handling costs so you always sell with confidence.
-              </p>
-
-              <div className="flex flex-wrap items-center gap-3.5 pt-2">
-                <Button
-                  size="lg"
-                  className="rounded-xl bg-forest hover:bg-forest-deep text-white shadow-lg shadow-forest/25"
-                  rightIcon={<ArrowRight className="w-4 h-4" />}
-                  onClick={() => navigate('/recommendations')}
-                >
-                  Find the Best Mandi
-                </Button>
-
-                <Button
-                  size="lg"
-                  variant="outline"
-                  className="rounded-xl bg-white/80 backdrop-blur-md hover:bg-white border-forest-sage/50 text-surface-charcoal hover:text-forest shadow-sm"
-                  onClick={() => navigate('/net-earnings-axiom')}
-                >
-                  Explore Net Earnings Axiom
-                </Button>
-              </div>
-
-              {/* Trust Badge Indicators */}
-              <div className="pt-2 flex flex-wrap items-center gap-3 text-xs font-medium text-surface-charcoal">
-                <div className="flex items-center gap-1.5 bg-forest-lightSage/50 backdrop-blur-sm px-3 py-1.5 rounded-full border border-forest-sage/40 shadow-xs">
-                  <CheckCircle2 className="w-4 h-4 text-forest-fresh" />
-                  <span>AGMARKNET Official Records</span>
-                </div>
-                <div className="flex items-center gap-1.5 bg-forest-lightSage/50 backdrop-blur-sm px-3 py-1.5 rounded-full border border-forest-sage/40 shadow-xs">
-                  <CheckCircle2 className="w-4 h-4 text-forest-fresh" />
-                  <span>Standardized INR / Quintal</span>
-                </div>
-                <div className="flex items-center gap-1.5 bg-forest-lightSage/50 backdrop-blur-sm px-3 py-1.5 rounded-full border border-forest-sage/40 shadow-xs">
-                  <CheckCircle2 className="w-4 h-4 text-forest-fresh" />
-                  <span>Zero Price Hallucination</span>
-                </div>
-              </div>
+        <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 w-full flex-1 flex flex-col justify-center">
+          {/* Editorial Value Proposition on Frosted Misty Glass Island */}
+          <div className="max-w-3xl bg-white/92 backdrop-blur-2xl border border-emerald-900/10 p-8 sm:p-10 lg:p-12 rounded-3xl shadow-[0_20px_60px_rgba(11,42,29,0.22)] space-y-6">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-forest-lightSage/80 border border-forest-sage/60 text-forest text-xs font-bold shadow-xs">
+              <span className="w-2 h-2 rounded-full bg-forest-fresh animate-pulse" />
+              <span>Karnataka Market Decision-Support Platform</span>
             </div>
 
-            {/* Right Column: Floating Misty Emerald Liquid Glass Net Earnings Preview Card */}
-            <div className="lg:col-span-6 relative">
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.2 }}
-                className="relative"
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-surface-darkCharcoal tracking-tight leading-[1.12]">
+              Make every <br />
+              <span className="text-surface-darkCharcoal">harvest count.</span>
+            </h1>
+
+            <p className="text-base sm:text-lg text-surface-charcoal/90 leading-relaxed max-w-xl font-medium">
+              The highest mandi price doesn’t guarantee the highest profit. MandiWise calculates your <strong>true expected net earnings</strong> after real transport and handling costs so you always sell with confidence.
+            </p>
+
+            <div className="flex flex-wrap items-center gap-3.5 pt-2">
+              <Button
+                size="lg"
+                className="rounded-xl bg-forest hover:bg-forest-deep text-white shadow-lg shadow-forest/25"
+                rightIcon={<ArrowRight className="w-4 h-4" />}
+                onClick={() => navigate('/recommendations')}
               >
-                <Card
-                  hoverLift
-                  className="relative bg-[#0A261A]/85 backdrop-blur-2xl border border-emerald-400/30 shadow-[0_20px_50px_rgba(5,26,17,0.55),inset_0_1px_1.5px_rgba(255,255,255,0.35)] rounded-3xl p-6 sm:p-7 overflow-hidden text-white"
-                >
-                  {/* Card Header */}
-                  <div className="flex items-center justify-between pb-4 border-b border-emerald-500/20 mb-5">
-                    <div className="flex items-center gap-2.5">
-                      <div className="w-10 h-10 rounded-2xl bg-emerald-600/30 border border-emerald-400/35 flex items-center justify-center text-emerald-300 shadow-[0_0_15px_rgba(16,185,129,0.25)]">
-                        <Scale className="w-5 h-5 text-emerald-200" />
-                      </div>
-                      <div>
-                        <h3 className="text-base font-bold text-white tracking-tight leading-tight">
-                          True Net Earnings Preview
-                        </h3>
-                        <p className="text-xs text-emerald-200/70">
-                          Kolar Taluk Farmer &bull; 25 Quintals Tomato
-                        </p>
-                      </div>
-                    </div>
-                    <span className="text-[11px] font-bold text-emerald-300 bg-emerald-500/20 px-3 py-1 rounded-full border border-emerald-400/30">
-                      Live Comparison
-                    </span>
-                  </div>
+                Find the Best Mandi
+              </Button>
 
-                  {/* Comparison Row: Kolar vs Yeshwanthpur */}
-                  <div className="space-y-3">
-                    {/* Option A: Kolar Local */}
-                    <div className="p-4 rounded-2xl bg-[#0F3827]/70 border border-emerald-400/40 shadow-sm transition-all duration-200 hover:scale-[1.01] hover:border-emerald-300/60">
-                      <div className="flex items-center justify-between mb-2">
-                        <div className="flex items-center gap-2">
-                          <div className="w-6 h-6 rounded-lg bg-emerald-500/20 border border-emerald-400/30 flex items-center justify-center shrink-0">
-                            <MapPin className="w-3.5 h-3.5 text-emerald-400" />
-                          </div>
-                          <span className="font-bold text-sm text-white">
-                            Kolar APMC (12 km)
-                          </span>
-                        </div>
-                        <span className="text-[10px] font-bold text-slate-950 bg-emerald-400 px-2.5 py-0.5 rounded-full shadow-xs">
-                          Recommended
-                        </span>
-                      </div>
-                      <div className="grid grid-cols-3 gap-2 text-xs">
-                        <div>
-                          <span className="text-emerald-200/65 block text-[10px]">Headline Modal</span>
-                          <span className="font-bold text-white">₹2,200/q</span>
-                        </div>
-                        <div>
-                          <span className="text-emerald-200/65 block text-[10px]">Transport Cost</span>
-                          <span className="font-semibold text-amber-300">-₹1,200</span>
-                        </div>
-                        <div className="text-right">
-                          <span className="text-emerald-200/65 block text-[10px]">Net Take-Home</span>
-                          <span className="font-extrabold text-emerald-400 text-sm">₹53,800</span>
-                        </div>
-                      </div>
-                    </div>
+              <Button
+                size="lg"
+                variant="outline"
+                className="rounded-xl bg-white/80 backdrop-blur-md hover:bg-white border-forest-sage/50 text-surface-charcoal hover:text-forest shadow-sm"
+                onClick={() => navigate('/net-earnings-axiom')}
+              >
+                Explore Net Earnings Axiom
+              </Button>
+            </div>
 
-                    {/* Option B: Yeshwanthpur Distant */}
-                    <div className="p-4 rounded-2xl bg-black/25 border border-white/10 shadow-sm transition-all duration-200 hover:scale-[1.01]">
-                      <div className="flex items-center justify-between mb-2">
-                        <div className="flex items-center gap-2">
-                          <div className="w-6 h-6 rounded-lg bg-white/10 border border-white/15 flex items-center justify-center shrink-0">
-                            <Building2 className="w-3.5 h-3.5 text-white/80" />
-                          </div>
-                          <span className="font-semibold text-sm text-white/90">
-                            Yeshwanthpur APMC (88 km)
-                          </span>
-                        </div>
-                        <span className="text-[10px] font-medium text-white/70 bg-white/10 px-2.5 py-0.5 rounded-full border border-white/15">
-                          Higher Headline
-                        </span>
-                      </div>
-                      <div className="grid grid-cols-3 gap-2 text-xs">
-                        <div>
-                          <span className="text-white/50 block text-[10px]">Headline Modal</span>
-                          <span className="font-semibold text-white/80">₹2,400/q</span>
-                        </div>
-                        <div>
-                          <span className="text-white/50 block text-[10px]">Freight &amp; Toll</span>
-                          <span className="font-semibold text-red-300">-₹8,200</span>
-                        </div>
-                        <div className="text-right">
-                          <span className="text-white/50 block text-[10px]">Net Take-Home</span>
-                          <span className="font-bold text-white/80 text-sm">₹51,800</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Summary Callout Banner (Misty Emerald Glass) */}
-                  <div className="mt-4 p-3 bg-emerald-950/60 border border-emerald-500/30 rounded-xl flex items-center justify-between text-xs">
-                    <span className="text-emerald-100 font-medium">
-                      Selling locally yields <strong className="text-emerald-300">+₹2,000 more net profit</strong> despite the lower headline rate.
-                    </span>
-                    <Tooltip text="MandiWise protects your wallet from hidden logistics deductions.">
-                      <HelpCircle className="w-4 h-4 text-emerald-400 hover:text-emerald-300 cursor-pointer shrink-0 ml-2" />
-                    </Tooltip>
-                  </div>
-                </Card>
-              </motion.div>
+            {/* Trust Badge Indicators */}
+            <div className="pt-2 flex flex-wrap items-center gap-3 text-xs font-medium text-surface-charcoal">
+              <div className="flex items-center gap-1.5 bg-forest-lightSage/50 backdrop-blur-sm px-3 py-1.5 rounded-full border border-forest-sage/40 shadow-xs">
+                <CheckCircle2 className="w-4 h-4 text-forest-fresh" />
+                <span>AGMARKNET Official Records</span>
+              </div>
+              <div className="flex items-center gap-1.5 bg-forest-lightSage/50 backdrop-blur-sm px-3 py-1.5 rounded-full border border-forest-sage/40 shadow-xs">
+                <CheckCircle2 className="w-4 h-4 text-forest-fresh" />
+                <span>Standardized INR / Quintal</span>
+              </div>
+              <div className="flex items-center gap-1.5 bg-forest-lightSage/50 backdrop-blur-sm px-3 py-1.5 rounded-full border border-forest-sage/40 shadow-xs">
+                <CheckCircle2 className="w-4 h-4 text-forest-fresh" />
+                <span>Zero Price Hallucination</span>
+              </div>
             </div>
           </div>
 

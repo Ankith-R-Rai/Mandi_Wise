@@ -58,13 +58,10 @@ public class CanonicalDataSeeder {
 
     @EventListener(ApplicationReadyEvent.class)
     public void onApplicationReady() {
-        if (marketPriceRepository.count() == 0) {
-            log.info("No market prices found in database. Initiating canonical data seeding...");
-            int inserted = seedCanonicalData();
-            log.info("Canonical data seeding completed. {} market price records ingested.", inserted);
-        } else {
-            ensureMarketCoordinates();
-        }
+        log.info("Ensuring canonical market data and coordinates are up to date...");
+        int count = seedCanonicalData();
+        ensureMarketCoordinates();
+        log.info("Canonical data synchronization completed. {} records processed/updated.", count);
     }
 
     @Transactional

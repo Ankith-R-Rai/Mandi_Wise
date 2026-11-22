@@ -20,44 +20,48 @@ class NetEarningsCalculatorTest {
     }
 
     @Test
-    @DisplayName("Calculates net earnings correctly for 1,000 kg tomato produce")
-    void testNetEarningsCalculation() {
-        // 1,000 kg = 10 quintals
+    @DisplayName("Calculates net earnings correctly for local mandi transit (<= 40 km)")
+    void testLocalNetEarningsCalculation() {
+        // 1,000 kg = 10 quintals, local 20 km trip
         BigDecimal qty = BigDecimal.valueOf(1000);
         BigDecimal modalPrice = BigDecimal.valueOf(2200); // 2,200 Rs/quintal
-        BigDecimal roadDistance = BigDecimal.valueOf(60.0); // 60 km
+        BigDecimal roadDistance = BigDecimal.valueOf(20.0); // 20 km local
         VehicleType vehicle = VehicleType.MINI_TRUCK; // 18 Rs/km, min 400
 
         CalculationBreakdown result = calculator.calculate(qty, modalPrice, roadDistance, vehicle, null, true);
 
         // Gross: 10 quintals * 2200 = 22,000 Rs
         assertThat(result.getGrossRevenue()).isEqualByComparingTo(BigDecimal.valueOf(22000.00));
-        // Transport: 60 km * 18 = 1,080 Rs (> min 400)
-        assertThat(result.getTransportCost()).isEqualByComparingTo(BigDecimal.valueOf(1080.00));
+        // Transport: 20 km * 18 = 360 Rs < min 400 => 400 Rs
+        assertThat(result.getTransportCost()).isEqualByComparingTo(BigDecimal.valueOf(400.00));
         // Cess: 1.5% of 22,000 = 330 Rs
         assertThat(result.getMandiCess()).isEqualByComparingTo(BigDecimal.valueOf(330.00));
         // Handling: 10 quintals * 15 = 150 Rs
         assertThat(result.getHandlingCharge()).isEqualByComparingTo(BigDecimal.valueOf(150.00));
-        // Spoilage: distance <= 100km, so 0 Rs
+        // Spoilage: distance <= 75km, so 0 Rs
         assertThat(result.getSpoilageAllowance()).isEqualByComparingTo(BigDecimal.valueOf(0.00));
-        // Total Deductions: 1080 + 330 + 150 = 1560 Rs
-        assertThat(result.getTotalDeductions()).isEqualByComparingTo(BigDecimal.valueOf(1560.00));
-        // Net: 22000 - 1560 = 20,440 Rs
-        assertThat(result.getNetEarnings()).isEqualByComparingTo(BigDecimal.valueOf(20440.00));
+        // Total Deductions: 400 + 330 + 150 = 880 Rs
+        assertThat(result.getTotalDeductions()).isEqualByComparingTo(BigDecimal.valueOf(880.00));
+        // Net: 22000 - 880 = 21,120 Rs
+        assertThat(result.getNetEarnings()).isEqualByComparingTo(BigDecimal.valueOf(21120.00));
     }
 
     @Test
-    @DisplayName("Applies spoilage deduction for perishable produce over 100 km transit")
-    void testSpoilageDeductionLongDistance() {
-        BigDecimal qty = BigDecimal.valueOf(2000); // 20 quintals
-        BigDecimal modalPrice = BigDecimal.valueOf(2500); // Gross = 50,000
-        BigDecimal roadDistance = BigDecimal.valueOf(150.0); // 150 km > 100 km
-        VehicleType vehicle = VehicleType.MEDIUM_TRUCK;
+    @DisplayName("Applies dedicated return factor and toll charges for inter-district trips (> 40 km)")
+    void testInterDistrictTransportWithTolls() {
+        BigDecimal qty = BigDecimal.valueOf(1000);
+        BigDecimal modalPrice = BigDecimal.valueOf(2500); // Gross = 25,000
+        BigDecimal roadDistance = BigDecimal.valueOf(100.0); // 100 km > 40 km
+        VehicleType vehicle = VehicleType.MINI_TRUCK; // 18 Rs/km
 
         CalculationBreakdown result = calculator.calculate(qty, modalPrice, roadDistance, vehicle, null, true);
 
-        // 1.5% of 50,000 = 750 Rs spoilage
-        assertThat(result.getSpoilageAllowance()).isEqualByComparingTo(BigDecimal.valueOf(750.00));
+        // Freight: 100km * 1.5 * 18 = 2,700 Rs
+        // Tolls: 100km * 1.8 = 180 Rs
+        // Total transport: 2,700 + 180 = 2,880 Rs
+        assertThat(result.getTransportCost()).isEqualByComparingTo(BigDecimal.valueOf(2880.00));
+        // Spoilage for 100km perishable: 1.5% of 25,000 = 375 Rs
+        assertThat(result.getSpoilageAllowance()).isEqualByComparingTo(BigDecimal.valueOf(375.00));
     }
 
     @Test

@@ -12,8 +12,11 @@ public class NetEarningsCalculator {
 
     public static final BigDecimal CESS_PERCENTAGE = BigDecimal.valueOf(0.015); // 1.5% APMC market cess
     public static final BigDecimal HANDLING_PER_QUINTAL = BigDecimal.valueOf(15.00); // Rs. 15 per quintal
-    public static final BigDecimal SPOILAGE_PERCENTAGE = BigDecimal.valueOf(0.015); // 1.5% for perishables over 100km
-    public static final BigDecimal LONG_DISTANCE_KM_THRESHOLD = BigDecimal.valueOf(100.0);
+    public static final BigDecimal LOCAL_RADIUS_KM = BigDecimal.valueOf(40.0);
+    public static final BigDecimal RETURN_LOGISTICS_FACTOR = BigDecimal.valueOf(1.5); // Dedicated empty return factor for inter-district trips
+    public static final BigDecimal HIGHWAY_TOLL_PER_KM = BigDecimal.valueOf(1.80); // Highway toll allowance for trips > 40 km
+    public static final BigDecimal MEDIUM_DISTANCE_KM = BigDecimal.valueOf(75.0);
+    public static final BigDecimal LONG_DISTANCE_KM = BigDecimal.valueOf(180.0);
 
     public CalculationBreakdown calculate(
             BigDecimal quantityKg,
@@ -42,13 +45,22 @@ public class NetEarningsCalculator {
         // 2. Gross revenue = quantityQuintals * modalPricePerQuintal
         BigDecimal grossRevenue = quantityQuintals.multiply(modalPricePerQuintal).setScale(2, RoundingMode.HALF_UP);
 
-        // 3. Transportation cost
+        // 3. Transportation cost with realistic logistics dynamics (empty return & tolls for inter-district transport)
         BigDecimal costPerKm = (customCostPerKm != null && customCostPerKm.compareTo(BigDecimal.ZERO) > 0)
                 ? customCostPerKm
                 : vehicleType.getDefaultCostPerKm();
 
-        BigDecimal rawTransport = roadDistanceKm.multiply(costPerKm).setScale(2, RoundingMode.HALF_UP);
-        BigDecimal transportCost = rawTransport.max(vehicleType.getBaseMinimumCharge()).setScale(2, RoundingMode.HALF_UP);
+        BigDecimal transportCost;
+        if (roadDistanceKm.compareTo(LOCAL_RADIUS_KM) <= 0) {
+            // Local intra-district transit
+            BigDecimal rawLocal = roadDistanceKm.multiply(costPerKm);
+            transportCost = rawLocal.max(vehicleType.getBaseMinimumCharge()).setScale(2, RoundingMode.HALF_UP);
+        } else {
+            // Dedicated inter-district commercial transit: accounts for empty return logistics (1.5x) and highway toll charges
+            BigDecimal freight = roadDistanceKm.multiply(RETURN_LOGISTICS_FACTOR).multiply(costPerKm);
+            BigDecimal tolls = roadDistanceKm.multiply(HIGHWAY_TOLL_PER_KM);
+            transportCost = freight.add(tolls).max(vehicleType.getBaseMinimumCharge()).setScale(2, RoundingMode.HALF_UP);
+        }
 
         // 4. APMC Market Cess = 1.5% of Gross Revenue
         BigDecimal mandiCess = grossRevenue.multiply(CESS_PERCENTAGE).setScale(2, RoundingMode.HALF_UP);
@@ -56,10 +68,14 @@ public class NetEarningsCalculator {
         // 5. Handling & Loading/Unloading = Rs. 15 per quintal
         BigDecimal handlingCharge = quantityQuintals.multiply(HANDLING_PER_QUINTAL).setScale(2, RoundingMode.HALF_UP);
 
-        // 6. Spoilage allowance: if perishable and road distance > 100 km, deduct 1.5%
+        // 6. Spoilage allowance for perishables based on distance slabs
         BigDecimal spoilageAllowance = BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP);
-        if (isPerishable && roadDistanceKm.compareTo(LONG_DISTANCE_KM_THRESHOLD) > 0) {
-            spoilageAllowance = grossRevenue.multiply(SPOILAGE_PERCENTAGE).setScale(2, RoundingMode.HALF_UP);
+        if (isPerishable) {
+            if (roadDistanceKm.compareTo(LONG_DISTANCE_KM) > 0) {
+                spoilageAllowance = grossRevenue.multiply(BigDecimal.valueOf(0.030)).setScale(2, RoundingMode.HALF_UP); // 3.0% for >180 km
+            } else if (roadDistanceKm.compareTo(MEDIUM_DISTANCE_KM) > 0) {
+                spoilageAllowance = grossRevenue.multiply(BigDecimal.valueOf(0.015)).setScale(2, RoundingMode.HALF_UP); // 1.5% for 75-180 km
+            }
         }
 
         // 7. Total Deductions

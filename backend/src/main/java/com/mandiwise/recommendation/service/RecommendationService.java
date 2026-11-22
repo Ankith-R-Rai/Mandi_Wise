@@ -70,7 +70,8 @@ public class RecommendationService {
         DistrictLocation origin = DistrictLocation.findByName(request.getOriginDistrict())
                 .orElse(new DistrictLocation(request.getOriginDistrict() != null ? request.getOriginDistrict() : "Bengaluru Urban", 12.9716, 77.5946));
 
-        List<MarketPrice> priceObservations = marketPriceRepository.findByCommodityId(commodity.getId());
+        List<MarketPrice> priceObservations = new ArrayList<>(marketPriceRepository.findByCommodityId(commodity.getId()));
+        priceObservations.sort(Comparator.comparing(MarketPrice::getObservationDate, Comparator.nullsLast(Comparator.reverseOrder())));
 
         // Deduplicate: take latest observation per distinct APMC market
         Map<UUID, MarketPrice> latestByMarket = new LinkedHashMap<>();
