@@ -60,14 +60,14 @@ class RecommendationServiceTest {
         kolarPrice.setId(UUID.randomUUID());
         kolarPrice.setCommodity(tomato);
         kolarPrice.setMarket(kolarMarket);
-        kolarPrice.setModalPrice(BigDecimal.valueOf(2200));
+        kolarPrice.setModalPrice(BigDecimal.valueOf(2550));
         kolarPrice.setObservationDate(LocalDate.now());
 
         MarketPrice bangalorePrice = new MarketPrice();
         bangalorePrice.setId(UUID.randomUUID());
         bangalorePrice.setCommodity(tomato);
         bangalorePrice.setMarket(bangaloreMarket);
-        bangalorePrice.setModalPrice(BigDecimal.valueOf(2600));
+        bangalorePrice.setModalPrice(BigDecimal.valueOf(2400));
         bangalorePrice.setObservationDate(LocalDate.now());
 
         // Fast zero-dependency JDK reflection proxy
@@ -143,5 +143,150 @@ class RecommendationServiceTest {
         assertThat(response.getTopRecommendation().getRank()).isEqualTo(1);
         assertThat(response.getTopRecommendation().getBreakdown().getNetEarnings())
                 .isGreaterThan(BigDecimal.ZERO);
+    }
+
+    @Test
+    @DisplayName("Scenario 1: Local mandi wins when near and competitive (Kolar farmer with Tomato)")
+    void testScenario1_LocalWinsWhenNear() {
+        RecommendationRequest request = new RecommendationRequest();
+        request.setCommodityName("Tomato");
+        request.setOriginDistrict("Kolar");
+        request.setQuantityKg(BigDecimal.valueOf(1500)); // 15 quintals
+        request.setVehicleType(VehicleType.MINI_TRUCK);
+
+        RecommendationResponse response = recommendationService.compareAndRecommend(request);
+
+        assertThat(response.getTopRecommendation()).isNotNull();
+        assertThat(response.getTopRecommendation().getMarketName()).isEqualTo("Kolar");
+        assertThat(response.getTopRecommendation().isTopRecommendation()).isTrue();
+        // Bengaluru is further and has lower net take-home
+        assertThat(response.getCandidateRankings().get(1).getMarketName()).isEqualTo("Bengaluru (Yeshwanthpur)");
+        assertThat(response.getTopRecommendation().getBreakdown().getNetEarnings())
+                .isGreaterThan(response.getCandidateRankings().get(1).getBreakdown().getNetEarnings());
+    }
+
+    @Test
+    @DisplayName("Scenario 2: Distant mandi wins when high price premium overcomes freight on bulk volume (Mysuru farmer with Onion)")
+    void testScenario2_DistantWinsWhenPricePremiumExceedsTransport() {
+        Commodity onion = new Commodity();
+        onion.setId(UUID.randomUUID());
+        onion.setName("Onion");
+        onion.setNormalizedName("onion");
+
+        Market mysuruMarket = new Market();
+        mysuruMarket.setId(UUID.randomUUID());
+        mysuruMarket.setName("Mysuru (Bandipalya)");
+        mysuruMarket.setNormalizedName("mysuru (bandipalya)");
+        mysuruMarket.setDistrict("Mysuru");
+        mysuruMarket.setLatitude(BigDecimal.valueOf(12.2814));
+        mysuruMarket.setLongitude(BigDecimal.valueOf(76.6780));
+
+        MarketPrice mysuruPrice = new MarketPrice();
+        mysuruPrice.setId(UUID.randomUUID());
+        mysuruPrice.setCommodity(onion);
+        mysuruPrice.setMarket(mysuruMarket);
+        mysuruPrice.setModalPrice(BigDecimal.valueOf(2600)); // Local price: Rs. 2,600
+        mysuruPrice.setObservationDate(LocalDate.now());
+
+        MarketPrice bangalorePrice = new MarketPrice();
+        bangalorePrice.setId(UUID.randomUUID());
+        bangalorePrice.setCommodity(onion);
+        bangalorePrice.setMarket(bangaloreMarket);
+        bangalorePrice.setModalPrice(BigDecimal.valueOf(2800)); // Distant price: Rs. 2,800 (+200/q premium)
+        bangalorePrice.setObservationDate(LocalDate.now());
+
+        RecommendationService onionService = buildCustomService(onion, List.of(mysuruPrice, bangalorePrice));
+
+        // Farmer with bulk load of 6,000 kg (60 quintals) in a Medium Truck
+        RecommendationRequest bulkRequest = new RecommendationRequest();
+        bulkRequest.setCommodityName("Onion");
+        bulkRequest.setOriginDistrict("Mysuru");
+        bulkRequest.setQuantityKg(BigDecimal.valueOf(6000));
+        bulkRequest.setVehicleType(VehicleType.MEDIUM_TRUCK);
+
+        RecommendationResponse bulkResponse = onionService.compareAndRecommend(bulkRequest);
+
+        // Distant Bengaluru wins because 60 quintals * Rs. 200 = Rs. 12,000 gross gain, easily exceeding Rs. ~5,900 freight!
+        assertThat(bulkResponse.getTopRecommendation().getMarketName()).isEqualTo("Bengaluru (Yeshwanthpur)");
+        assertThat(bulkResponse.getTopRecommendation().getNetAdvantageVsNearest()).isGreaterThan(BigDecimal.valueOf(5000));
+    }
+
+    @Test
+    @DisplayName("Scenario 3: Dynamic Volume Threshold (Same markets, but small load favors Local, bulk load favors Distant)")
+    void testScenario3_VolumeThreshold_SmallLoadFavorsLocal_BulkLoadFavorsDistant() {
+        Commodity onion = new Commodity();
+        onion.setId(UUID.randomUUID());
+        onion.setName("Onion");
+        onion.setNormalizedName("onion");
+
+        Market mysuruMarket = new Market();
+        mysuruMarket.setId(UUID.randomUUID());
+        mysuruMarket.setName("Mysuru (Bandipalya)");
+        mysuruMarket.setNormalizedName("mysuru (bandipalya)");
+        mysuruMarket.setDistrict("Mysuru");
+        mysuruMarket.setLatitude(BigDecimal.valueOf(12.2814));
+        mysuruMarket.setLongitude(BigDecimal.valueOf(76.6780));
+
+        MarketPrice mysuruPrice = new MarketPrice();
+        mysuruPrice.setId(UUID.randomUUID());
+        mysuruPrice.setCommodity(onion);
+        mysuruPrice.setMarket(mysuruMarket);
+        mysuruPrice.setModalPrice(BigDecimal.valueOf(2600)); // Rs. 2,600
+        mysuruPrice.setObservationDate(LocalDate.now());
+
+        MarketPrice bangalorePrice = new MarketPrice();
+        bangalorePrice.setId(UUID.randomUUID());
+        bangalorePrice.setCommodity(onion);
+        bangalorePrice.setMarket(bangaloreMarket);
+        bangalorePrice.setModalPrice(BigDecimal.valueOf(2800)); // Rs. 2,800
+        bangalorePrice.setObservationDate(LocalDate.now());
+
+        RecommendationService onionService = buildCustomService(onion, List.of(mysuruPrice, bangalorePrice));
+
+        // Part A: Small load (10 quintals / 1,000 kg) -> Transport to Bengaluru wipes out the Rs. 2,000 gross premium -> LOCAL WINS
+        RecommendationRequest smallRequest = new RecommendationRequest();
+        smallRequest.setCommodityName("Onion");
+        smallRequest.setOriginDistrict("Mysuru");
+        smallRequest.setQuantityKg(BigDecimal.valueOf(1000));
+        smallRequest.setVehicleType(VehicleType.MINI_TRUCK);
+
+        RecommendationResponse smallResponse = onionService.compareAndRecommend(smallRequest);
+        assertThat(smallResponse.getTopRecommendation().getMarketName()).isEqualTo("Mysuru (Bandipalya)");
+
+        // Part B: Bulk load (60 quintals / 6,000 kg) -> Rs. 12,000 gross premium exceeds truck freight -> DISTANT WINS
+        RecommendationRequest bulkRequest = new RecommendationRequest();
+        bulkRequest.setCommodityName("Onion");
+        bulkRequest.setOriginDistrict("Mysuru");
+        bulkRequest.setQuantityKg(BigDecimal.valueOf(6000));
+        bulkRequest.setVehicleType(VehicleType.MEDIUM_TRUCK);
+
+        RecommendationResponse bulkResponse = onionService.compareAndRecommend(bulkRequest);
+        assertThat(bulkResponse.getTopRecommendation().getMarketName()).isEqualTo("Bengaluru (Yeshwanthpur)");
+    }
+
+    private RecommendationService buildCustomService(Commodity commodity, List<MarketPrice> prices) {
+        CommodityRepository cRepo = (CommodityRepository) Proxy.newProxyInstance(
+                CommodityRepository.class.getClassLoader(),
+                new Class<?>[]{CommodityRepository.class},
+                (proxy, method, args) -> {
+                    if (method.getName().equals("findByNormalizedName")) {
+                        return Optional.of(commodity);
+                    }
+                    return null;
+                }
+        );
+
+        MarketPriceRepository pRepo = (MarketPriceRepository) Proxy.newProxyInstance(
+                MarketPriceRepository.class.getClassLoader(),
+                new Class<?>[]{MarketPriceRepository.class},
+                (proxy, method, args) -> {
+                    if (method.getName().contains("Commodity")) {
+                        return prices;
+                    }
+                    return null;
+                }
+        );
+
+        return new RecommendationService(cRepo, pRepo, new DistanceCalculator(), new NetEarningsCalculator());
     }
 }
