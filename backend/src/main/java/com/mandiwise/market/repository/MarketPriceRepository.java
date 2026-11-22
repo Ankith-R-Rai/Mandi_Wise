@@ -31,6 +31,8 @@ public interface MarketPriceRepository extends JpaRepository<MarketPrice, UUID>,
     @Query("SELECT COUNT(DISTINCT mp.market.id) FROM MarketPrice mp")
     long countDistinctMarketsWithPrices();
 
+    List<MarketPrice> findByCommodityId(UUID commodityId);
+
     @Query("SELECT MAX(mp.observationDate) FROM MarketPrice mp")
     LocalDate findLatestObservationDate();
 

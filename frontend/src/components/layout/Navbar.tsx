@@ -30,10 +30,10 @@ export const Navbar: React.FC<NavbarProps> = ({ onNavigateSection, onOpenAuth })
   };
 
   const navLinks = [
+    { label: 'Recommendations', id: 'recommendation-studio' },
     { label: 'Market Prices', id: 'benchmarks' },
     { label: 'Net Earnings Axiom', id: 'axiom' },
     { label: 'Features', id: 'features' },
-    { label: 'UI Playground', id: 'design-system' },
   ];
 
   const handleNavClick = (id: string) => {

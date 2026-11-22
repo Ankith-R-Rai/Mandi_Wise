@@ -25,6 +25,15 @@ public class CanonicalDataSeeder {
 
     private static final Logger log = LoggerFactory.getLogger(CanonicalDataSeeder.class);
 
+    private static final Map<String, double[]> MANDI_COORDINATES = Map.of(
+            "kolar", new double[]{13.1367, 78.1291},
+            "bengaluru (yeshwanthpur)", new double[]{13.0238, 77.5529},
+            "hubli (amaragol)", new double[]{15.3976, 75.1011},
+            "belagavi", new double[]{15.8617, 74.5089},
+            "mysuru (bandipalya)", new double[]{12.2814, 76.6780},
+            "davanagere", new double[]{14.4644, 75.9218}
+    );
+
     private final CommodityRepository commodityRepository;
     private final MarketRepository marketRepository;
     private final DataSourceRepository dataSourceRepository;
@@ -53,6 +62,29 @@ public class CanonicalDataSeeder {
             log.info("No market prices found in database. Initiating canonical data seeding...");
             int inserted = seedCanonicalData();
             log.info("Canonical data seeding completed. {} market price records ingested.", inserted);
+        } else {
+            ensureMarketCoordinates();
+        }
+    }
+
+    @Transactional
+    public void ensureMarketCoordinates() {
+        List<Market> markets = marketRepository.findAll();
+        boolean updatedAny = false;
+        for (Market m : markets) {
+            if (m.getLatitude() == null || m.getLongitude() == null) {
+                double[] coords = MANDI_COORDINATES.get(m.getNormalizedName());
+                if (coords != null) {
+                    m.setLatitude(BigDecimal.valueOf(coords[0]));
+                    m.setLongitude(BigDecimal.valueOf(coords[1]));
+                    marketRepository.save(m);
+                    updatedAny = true;
+                    log.info("Updated coordinates for market '{}': {}, {}", m.getName(), coords[0], coords[1]);
+                }
+            }
+        }
+        if (updatedAny) {
+            log.info("APMC market coordinates verification completed.");
         }
     }
 
@@ -198,7 +230,7 @@ public class CanonicalDataSeeder {
 
     private Market resolveMarket(String name, String district, String state) {
         String normalized = name.toLowerCase().trim();
-        return marketRepository.findByNormalizedNameAndDistrictAndState(normalized, district, state)
+        Market market = marketRepository.findByNormalizedNameAndDistrictAndState(normalized, district, state)
                 .orElseGet(() -> {
                     Market m = new Market();
                     m.setName(name);
@@ -206,8 +238,17 @@ public class CanonicalDataSeeder {
                     m.setDistrict(district);
                     m.setState(state);
                     m.setStateCode("KA");
-                    return marketRepository.save(m);
+                    return m;
                 });
+
+        if (market.getLatitude() == null || market.getLongitude() == null) {
+            double[] coords = MANDI_COORDINATES.get(normalized);
+            if (coords != null) {
+                market.setLatitude(BigDecimal.valueOf(coords[0]));
+                market.setLongitude(BigDecimal.valueOf(coords[1]));
+            }
+        }
+        return marketRepository.save(market);
     }
 
     private DataSource resolveDataSource(String name, String type, String url) {

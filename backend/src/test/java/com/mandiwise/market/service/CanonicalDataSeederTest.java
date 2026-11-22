@@ -47,6 +47,10 @@ class CanonicalDataSeederTest {
 
         List<Market> markets = marketRepository.findAll();
         assertThat(markets).isNotEmpty();
+        for (Market m : markets) {
+            assertThat(m.getLatitude()).as("Market " + m.getName() + " latitude must not be null").isNotNull();
+            assertThat(m.getLongitude()).as("Market " + m.getName() + " longitude must not be null").isNotNull();
+        }
 
         // 2. Re-running seeder proves idempotency (0 newly inserted, no duplicate errors)
         int secondRunInserted = seeder.seedCanonicalData();

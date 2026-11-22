@@ -16,6 +16,7 @@ import {
 import { HeroBackground } from '../components/hero/HeroBackground';
 import { MarketPriceTicker } from '../components/hero/MarketPriceTicker';
 import { MarketPriceExplorer } from '../components/market/MarketPriceExplorer';
+import { RecommendationStudio } from '../components/recommendation/RecommendationStudio';
 import { Button } from '../components/ui/Button';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '../components/ui/Card';
 import { Badge } from '../components/ui/Badge';
@@ -70,7 +71,7 @@ export const LandingPage: React.FC = () => {
                   className="rounded-xl bg-forest hover:bg-forest-deep text-white shadow-lg shadow-forest/25"
                   rightIcon={<ArrowRight className="w-4 h-4" />}
                   onClick={() => {
-                    const el = document.getElementById('benchmarks');
+                    const el = document.getElementById('recommendation-studio');
                     el?.scrollIntoView({ behavior: 'smooth' });
                   }}
                 >
@@ -373,6 +374,13 @@ export const LandingPage: React.FC = () => {
             onClearSelectedMandi={() => setSelectedTickerItem(null)}
           />
         </div>
+      </section>
+
+      {/* =========================================================================
+          3.5 MANDI RECOMMENDATION STUDIO (Phase 6 - P0)
+         ========================================================================= */}
+      <section className="py-20 bg-slate-950 text-slate-100 border-t border-slate-800">
+        <RecommendationStudio />
       </section>
 
       {/* =========================================================================
