@@ -5,7 +5,6 @@ import {
   TrendingUp,
   Truck,
   CheckCircle2,
-  Search,
   BarChart3,
   Camera,
   HelpCircle,
@@ -13,11 +12,10 @@ import {
   MapPin,
   Building2,
   AlertTriangle,
-  Pin,
 } from 'lucide-react';
-import { CommodityIcon } from '../components/ui/CommodityIcon';
 import { HeroBackground } from '../components/hero/HeroBackground';
 import { MarketPriceTicker } from '../components/hero/MarketPriceTicker';
+import { MarketPriceExplorer } from '../components/market/MarketPriceExplorer';
 import { Button } from '../components/ui/Button';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '../components/ui/Card';
 import { Badge } from '../components/ui/Badge';
@@ -27,49 +25,16 @@ import { Modal } from '../components/ui/Modal';
 import { Tabs } from '../components/ui/Tabs';
 import { Skeleton } from '../components/ui/Skeleton';
 import { Tooltip } from '../components/ui/Tooltip';
-import {
-  Table,
-  TableHeader,
-  TableBody,
-  TableRow,
-  TableHead,
-  TableCell,
-} from '../components/ui/Table';
-import {
-  CANONICAL_MANDI_RECORDS,
-  type CanonicalPriceRecord,
-} from '../data/canonicalMandiData';
-import { cn } from '../utils/cn';
 
 export const LandingPage: React.FC = () => {
-  // State for Market Benchmark Table
-  const [selectedCommodity, setSelectedCommodity] = useState<string>('All');
-  const [searchQuery, setSearchQuery] = useState<string>('');
-  const [selectedRecord, setSelectedRecord] = useState<CanonicalPriceRecord | null>(null);
+  // State for Market Benchmark Table & Ticker Selection
+  const [selectedTickerItem, setSelectedTickerItem] = useState<{ commodity: string; market: string } | null>(null);
 
   // State for Interactive Component Showcase
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isButtonLoading, setIsButtonLoading] = useState(false);
   const [activeUiTab, setActiveUiTab] = useState('buttons');
   const [inputVal, setInputVal] = useState('Bangalore Rural Farm');
-
-  // Filter canonical data
-  const filteredRecords = CANONICAL_MANDI_RECORDS.filter((r) => {
-    const matchesCommodity =
-      selectedCommodity === 'All' || r.commodity.toLowerCase() === selectedCommodity.toLowerCase();
-    const matchesSearch =
-      r.market.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      r.district.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      r.commodity.toLowerCase().includes(searchQuery.toLowerCase());
-    return matchesCommodity && matchesSearch;
-  });
-
-  const formatCurrency = (val: number) =>
-    new Intl.NumberFormat('en-IN', {
-      style: 'currency',
-      currency: 'INR',
-      maximumFractionDigits: 0,
-    }).format(val);
 
   return (
     <div className="flex flex-col w-full min-h-screen">
@@ -257,7 +222,7 @@ export const LandingPage: React.FC = () => {
           <div className="mt-8 sm:mt-12">
             <MarketPriceTicker
               onSelectRecord={(rec) => {
-                setSelectedRecord(rec);
+                setSelectedTickerItem(rec);
                 const el = document.getElementById('benchmarks');
                 el?.scrollIntoView({ behavior: 'smooth' });
               }}
@@ -401,139 +366,12 @@ export const LandingPage: React.FC = () => {
       {/* =========================================================================
           3. LIVE MARKET BENCHMARK EXPLORATION TABLE
          ========================================================================= */}
-      <section id="benchmarks" className="py-20 bg-[#EDF5F0]">
+      <section className="py-20 bg-[#EDF5F0]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
-            <div>
-              <Badge variant="info" size="sm" className="mb-2">
-                Phase 2 Verified Data
-              </Badge>
-              <h2 className="text-2xl sm:text-3xl font-bold text-surface-darkCharcoal tracking-tight">
-                Karnataka APMC Price Benchmarks
-              </h2>
-              <p className="text-xs sm:text-sm text-surface-muted mt-1">
-                Authentic prices recorded across 6 major agricultural trade corridors.
-              </p>
-            </div>
-
-            {/* Commodity Filter Tabs with Hover Animation */}
-            <div className="flex items-center gap-1.5 bg-white p-1 rounded-2xl border border-emerald-900/10 shadow-xs">
-              {['All', 'Tomato', 'Onion', 'Potato'].map((comm) => (
-                <button
-                  key={comm}
-                  onClick={() => setSelectedCommodity(comm)}
-                  className={cn(
-                    'flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-semibold rounded-xl transition-all duration-200 cursor-pointer select-none',
-                    selectedCommodity === comm
-                      ? 'bg-forest text-white shadow-sm shadow-forest/25 scale-105'
-                      : 'text-surface-charcoal hover:bg-forest-lightSage hover:text-forest'
-                  )}
-                >
-                  {comm !== 'All' && <CommodityIcon commodity={comm} size={14} />}
-                  <span>{comm === 'All' ? 'All Crops' : comm}</span>
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Search Filter Controls */}
-          <div className="mb-4 flex flex-col sm:flex-row gap-3">
-            <div className="flex-1">
-              <Input
-                placeholder="Search market (e.g. Kolar, Yeshwanthpur, Hubli) or district..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                leftIcon={<Search className="w-4 h-4" />}
-              />
-            </div>
-            <div className="text-xs font-medium text-surface-muted self-center">
-              Showing {filteredRecords.length} verified records
-            </div>
-          </div>
-
-          {/* Selected Ticker Highlight Banner */}
-          {selectedRecord && (
-            <div className="mb-4 p-3.5 bg-forest-lightSage border border-forest-sage rounded-2xl flex items-center justify-between text-xs shadow-xs">
-              <div className="flex items-center gap-2.5">
-                <div className="w-6 h-6 rounded-md bg-forest-sage/40 flex items-center justify-center shrink-0">
-                  <Pin className="w-3.5 h-3.5 text-forest-deep" />
-                </div>
-                <span className="text-forest-deep">
-                  Filtered by ticker selection: <strong>{selectedRecord.commodity} ({selectedRecord.variety})</strong> at <strong>{selectedRecord.market}</strong> &bull; Modal Price: <strong>{formatCurrency(selectedRecord.modal_price)}/quintal</strong>
-                </span>
-              </div>
-              <button
-                onClick={() => {
-                  setSelectedRecord(null);
-                  setSearchQuery('');
-                  setSelectedCommodity('All');
-                }}
-                className="font-semibold text-forest underline hover:text-forest-deep cursor-pointer"
-              >
-                Clear Filter
-              </button>
-            </div>
-          )}
-
-          {/* Table Container */}
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Commodity &amp; Variety</TableHead>
-                <TableHead>APMC Market</TableHead>
-                <TableHead>District</TableHead>
-                <TableHead className="text-right">Min Price</TableHead>
-                <TableHead className="text-right">Max Price</TableHead>
-                <TableHead className="text-right">Modal Price</TableHead>
-                <TableHead className="text-center">Observed Date</TableHead>
-                <TableHead className="text-center">Freshness</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {filteredRecords.map((item, idx) => (
-                <TableRow key={`${item.commodity}-${item.market}-${idx}`} className="hover:bg-emerald-50/70">
-                  <TableCell className="font-semibold text-surface-darkCharcoal">
-                    <div className="flex items-center gap-2">
-                      <CommodityIcon commodity={item.commodity} size={15} />
-                      <span>
-                        {item.commodity}{' '}
-                        <span className="text-xs font-normal text-surface-muted">({item.variety})</span>
-                      </span>
-                    </div>
-                  </TableCell>
-                  <TableCell className="font-medium text-forest">{item.market}</TableCell>
-                  <TableCell className="text-surface-muted">{item.district}</TableCell>
-                  <TableCell className="text-right text-surface-charcoal">
-                    {formatCurrency(item.min_price)}
-                  </TableCell>
-                  <TableCell className="text-right text-surface-charcoal">
-                    {formatCurrency(item.max_price)}
-                  </TableCell>
-                  <TableCell className="text-right font-bold text-forest text-sm">
-                    {formatCurrency(item.modal_price)}
-                    <span className="text-[10px] font-normal text-surface-muted ml-0.5">/q</span>
-                  </TableCell>
-                  <TableCell className="text-center text-xs text-surface-muted">
-                    {item.observation_date}
-                  </TableCell>
-                  <TableCell className="text-center">
-                    <Badge
-                      variant={
-                        item.freshness_status === 'FRESH'
-                          ? 'fresh'
-                          : item.freshness_status === 'ACCEPTABLE'
-                          ? 'acceptable'
-                          : 'stale'
-                      }
-                      size="sm"
-                    >
-                      {item.freshness_status}
-                    </Badge>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+          <MarketPriceExplorer
+            selectedMandiRecord={selectedTickerItem}
+            onClearSelectedMandi={() => setSelectedTickerItem(null)}
+          />
         </div>
       </section>
 
