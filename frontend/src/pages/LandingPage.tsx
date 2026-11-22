@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'motion/react';
+import { useNavigate } from 'react-router-dom';
 import {
   ArrowRight,
   TrendingUp,
@@ -16,7 +17,6 @@ import {
 import { HeroBackground } from '../components/hero/HeroBackground';
 import { MarketPriceTicker } from '../components/hero/MarketPriceTicker';
 import { MarketPriceExplorer } from '../components/market/MarketPriceExplorer';
-import { RecommendationStudio } from '../components/recommendation/RecommendationStudio';
 import { Button } from '../components/ui/Button';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '../components/ui/Card';
 import { Badge } from '../components/ui/Badge';
@@ -28,6 +28,7 @@ import { Skeleton } from '../components/ui/Skeleton';
 import { Tooltip } from '../components/ui/Tooltip';
 
 export const LandingPage: React.FC = () => {
+  const navigate = useNavigate();
   // State for Market Benchmark Table & Ticker Selection
   const [selectedTickerItem, setSelectedTickerItem] = useState<{ commodity: string; market: string } | null>(null);
 
@@ -70,10 +71,7 @@ export const LandingPage: React.FC = () => {
                   size="lg"
                   className="rounded-xl bg-forest hover:bg-forest-deep text-white shadow-lg shadow-forest/25"
                   rightIcon={<ArrowRight className="w-4 h-4" />}
-                  onClick={() => {
-                    const el = document.getElementById('recommendation-studio');
-                    el?.scrollIntoView({ behavior: 'smooth' });
-                  }}
+                  onClick={() => navigate('/recommendations')}
                 >
                   Find the Best Mandi
                 </Button>
@@ -82,10 +80,7 @@ export const LandingPage: React.FC = () => {
                   size="lg"
                   variant="outline"
                   className="rounded-xl bg-white/80 backdrop-blur-md hover:bg-white border-forest-sage/50 text-surface-charcoal hover:text-forest shadow-sm"
-                  onClick={() => {
-                    const el = document.getElementById('axiom');
-                    el?.scrollIntoView({ behavior: 'smooth' });
-                  }}
+                  onClick={() => navigate('/net-earnings-axiom')}
                 >
                   Explore Net Earnings Axiom
                 </Button>
@@ -374,13 +369,6 @@ export const LandingPage: React.FC = () => {
             onClearSelectedMandi={() => setSelectedTickerItem(null)}
           />
         </div>
-      </section>
-
-      {/* =========================================================================
-          3.5 MANDI RECOMMENDATION STUDIO (Phase 6 - P0)
-         ========================================================================= */}
-      <section className="py-20 bg-slate-950 text-slate-100 border-t border-slate-800">
-        <RecommendationStudio />
       </section>
 
       {/* =========================================================================

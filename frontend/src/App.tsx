@@ -1,7 +1,11 @@
 import { useState } from 'react';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { Navbar } from './components/layout/Navbar';
 import { LandingPage } from './pages/LandingPage';
+import { RecommendationsPage } from './pages/RecommendationsPage';
+import { MarketPricesPage } from './pages/MarketPricesPage';
+import { NetEarningsAxiomPage } from './pages/NetEarningsAxiomPage';
 import { AuthPage } from './pages/AuthPage';
 import { Footer } from './components/layout/Footer';
 import { Sprout } from 'lucide-react';
@@ -36,12 +40,18 @@ function AppContent() {
     );
   }
 
-  // Render full application / dashboard
+  // Render full application with dedicated page routing
   return (
     <div className="min-h-screen flex flex-col bg-surface-background text-surface-charcoal">
       <Navbar onOpenAuth={() => setGuestMode(false)} />
       <main className="flex-1">
-        <LandingPage />
+        <Routes>
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/recommendations" element={<RecommendationsPage />} />
+          <Route path="/market-prices" element={<MarketPricesPage />} />
+          <Route path="/net-earnings-axiom" element={<NetEarningsAxiomPage />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
       </main>
       <Footer />
     </div>
@@ -51,7 +61,9 @@ function AppContent() {
 export default function App() {
   return (
     <AuthProvider>
-      <AppContent />
+      <BrowserRouter>
+        <AppContent />
+      </BrowserRouter>
     </AuthProvider>
   );
 }

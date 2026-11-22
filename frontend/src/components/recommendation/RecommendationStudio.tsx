@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { recommendationService } from '../../services/recommendationService';
 import {
   DistrictOption,
@@ -11,21 +11,24 @@ import { RecommendationInputForm } from './RecommendationInputForm';
 import { TopRecommendationCard } from './TopRecommendationCard';
 import { MandiComparisonTable } from './MandiComparisonTable';
 import { CalculationAuditModal } from './CalculationAuditModal';
-import { Scale, AlertCircle, Info, ShieldCheck } from 'lucide-react';
+import { Scale, AlertCircle, Info, ShieldCheck, CheckCircle2, Loader2, Sparkles } from 'lucide-react';
 
 export const RecommendationStudio: React.FC = () => {
-
   const [districts, setDistricts] = useState<DistrictOption[]>([]);
   const [vehicles, setVehicles] = useState<VehicleOption[]>([]);
   const [response, setResponse] = useState<RecommendationResponse | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isInitializing, setIsInitializing] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [lastCalculatedTime, setLastCalculatedTime] = useState<string | null>(null);
 
   // Modal audit state
   const [selectedAuditCandidate, setSelectedAuditCandidate] = useState<MandiCandidate | null>(null);
 
-  // Fetch initial reference data and run initial recommendation
+  // Results ref to scroll to on new calculation
+  const resultsRef = useRef<HTMLDivElement>(null);
+
+  // Fetch initial reference data and run initial baseline recommendation
   useEffect(() => {
     let isMounted = true;
 
@@ -41,15 +44,15 @@ export const RecommendationStudio: React.FC = () => {
           setDistricts(districtsData);
           setVehicles(vehiclesData);
 
-          // Initial default calculation
-          const initialDistrict = 'Bengaluru Urban';
+          // Initial baseline calculation
           const initialRes = await recommendationService.compareAndRecommend({
             commodityName: 'Tomato',
             quantityKg: 1500,
-            originDistrict: initialDistrict,
+            originDistrict: 'Bengaluru Urban',
           });
 
           setResponse(initialRes);
+          setLastCalculatedTime(new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }));
         }
       } catch (err: any) {
         if (isMounted) {
@@ -80,8 +83,22 @@ export const RecommendationStudio: React.FC = () => {
       try {
         setIsLoading(true);
         setError(null);
+
+        // Add a deliberate brief delay if network is instant so the user clearly sees the calculation happening
+        const startTime = Date.now();
         const res = await recommendationService.compareAndRecommend(params);
+        const elapsed = Date.now() - startTime;
+        if (elapsed < 400) {
+          await new Promise((r) => setTimeout(r, 400 - elapsed));
+        }
+
         setResponse(res);
+        setLastCalculatedTime(new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }));
+
+        // Smoothly scroll down to results so user sees the change immediately
+        setTimeout(() => {
+          resultsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 100);
       } catch (err: any) {
         setError(err.message || 'Failed to generate market recommendations.');
       } finally {
@@ -92,84 +109,123 @@ export const RecommendationStudio: React.FC = () => {
   );
 
   return (
-    <section id="recommendation-studio" className="w-full py-10 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-8 animate-fade-in">
+    <div className="w-full space-y-8 animate-fade-in text-surface-charcoal">
       {/* Studio Header */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-6 border-b border-slate-800">
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-6 border-b border-emerald-900/10">
         <div>
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold uppercase tracking-wider mb-2">
-            <Scale className="w-3.5 h-3.5" />
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-forest-lightSage border border-forest-sage text-forest text-xs font-bold uppercase tracking-wider mb-2.5 shadow-xs">
+            <Scale className="w-4 h-4" />
             Decision-Support Engine
           </div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-100 tracking-tight">
+          <h1 className="text-3xl sm:text-4xl font-extrabold text-surface-darkCharcoal tracking-tight">
             Karnataka Mandi Recommendation &amp; Comparison
           </h1>
-          <p className="text-sm text-slate-400 mt-1 max-w-2xl">
-            Evaluate true take-home earnings by factoring real road distances, transporter freight rates, APMC cess, and mandi handling charges.
+          <p className="text-sm sm:text-base text-surface-muted mt-1.5 max-w-2xl">
+            Evaluate true take-home earnings by factoring real road distances, freight transport models, statutory APMC cess, and mandi handling charges.
           </p>
         </div>
 
-        <div className="flex items-center gap-3 text-xs text-slate-400 bg-slate-900/60 p-3 rounded-xl border border-slate-800 self-start md:self-auto">
-          <ShieldCheck className="w-4 h-4 text-emerald-400 shrink-0" />
-          <span>Centralized Spring Boot Financial Calculation Standard</span>
+        <div className="flex items-center gap-2.5 text-xs text-surface-charcoal bg-white p-3.5 rounded-2xl border border-emerald-900/10 shadow-xs self-start md:self-auto">
+          <ShieldCheck className="w-4 h-4 text-forest-fresh shrink-0" />
+          <span className="font-semibold">Spring Boot Financial Calculation Standard</span>
         </div>
       </div>
 
       {/* Error Banner */}
       {error && (
-        <div className="flex items-start gap-3 p-4 rounded-xl bg-rose-950/40 border border-rose-500/40 text-rose-200 text-sm">
-          <AlertCircle className="w-5 h-5 text-rose-400 shrink-0 mt-0.5" />
+        <div className="flex items-start gap-3 p-4 rounded-2xl bg-rose-50 border border-rose-200 text-rose-800 text-sm">
+          <AlertCircle className="w-5 h-5 text-rose-600 shrink-0 mt-0.5" />
           <div>
-            <p className="font-semibold">Calculation Error</p>
-            <p className="text-xs text-rose-300 mt-0.5">{error}</p>
+            <p className="font-bold">Calculation Error</p>
+            <p className="text-xs text-rose-700 mt-0.5">{error}</p>
           </div>
         </div>
       )}
 
-      {/* Main Grid: Input Form + Results */}
-      <div className="space-y-8">
-        <RecommendationInputForm
-          districts={districts}
-          vehicles={vehicles}
-          isLoading={isLoading || isInitializing}
-          defaultDistrict="Bengaluru Urban"
-          onSubmit={handleCalculate}
-        />
+      {/* Main Form */}
+      <RecommendationInputForm
+        districts={districts}
+        vehicles={vehicles}
+        isLoading={isLoading || isInitializing}
+        defaultDistrict="Bengaluru Urban"
+        onSubmit={handleCalculate}
+      />
 
-        {/* Top Recommendation Spotlight */}
-        {response?.topRecommendation && (
-          <TopRecommendationCard
-            candidate={response.topRecommendation}
-            commodityName={response.commodityName}
-            rationale={response.recommendationRationale}
-            onAuditClick={(c) => setSelectedAuditCandidate(c)}
-          />
-        )}
+      {/* Explicit Loading Overlay / Card */}
+      {isLoading && (
+        <div className="p-8 sm:p-12 rounded-3xl bg-white/95 backdrop-blur-md border border-forest-sage text-center space-y-4 shadow-lg animate-pulse">
+          <div className="w-14 h-14 mx-auto rounded-full bg-forest-lightSage flex items-center justify-center text-forest">
+            <Loader2 className="w-7 h-7 animate-spin text-forest" />
+          </div>
+          <div className="max-w-md mx-auto">
+            <h3 className="text-lg font-bold text-surface-darkCharcoal">
+              Analyzing Karnataka APMC Markets...
+            </h3>
+            <p className="text-xs sm:text-sm text-surface-muted mt-1">
+              Calculating highway distances, vehicle freight rates, and net take-home earnings across candidate mandis.
+            </p>
+          </div>
+        </div>
+      )}
 
-        {/* Candidate Ranking Table */}
-        {response && (
+      {/* Results Section */}
+      {!isLoading && response && (
+        <div ref={resultsRef} className="space-y-8 scroll-mt-24 transition-all">
+          {/* Real-time Calculation Confirmation Banner */}
+          {lastCalculatedTime && (
+            <div className="flex items-center justify-between p-4 rounded-2xl bg-forest-lightSage/70 border border-forest-sage shadow-xs animate-fade-in">
+              <div className="flex items-center gap-3">
+                <div className="p-1.5 rounded-full bg-forest text-white">
+                  <CheckCircle2 className="w-4 h-4" />
+                </div>
+                <div>
+                  <span className="text-xs font-bold text-forest block">
+                    Calculated Just Now at {lastCalculatedTime}
+                  </span>
+                  <span className="text-[11px] text-surface-charcoal">
+                    Evaluated {response.totalCandidatesEvaluated} APMC markets for {response.quantityKg.toLocaleString()} kg of {response.commodityName} from {response.originDistrict}.
+                  </span>
+                </div>
+              </div>
+              <div className="hidden sm:inline-flex items-center gap-1.5 text-xs font-bold text-forest bg-white px-3 py-1 rounded-full border border-forest-sage">
+                <Sparkles className="w-3.5 h-3.5" />
+                Updated Live
+              </div>
+            </div>
+          )}
+
+          {/* Top Recommendation Spotlight */}
+          {response.topRecommendation && (
+            <TopRecommendationCard
+              candidate={response.topRecommendation}
+              commodityName={response.commodityName}
+              rationale={response.recommendationRationale}
+              onAuditClick={(c) => setSelectedAuditCandidate(c)}
+            />
+          )}
+
+          {/* Candidate Ranking Table */}
           <MandiComparisonTable
             candidates={response.candidateRankings}
             onAuditClick={(c) => setSelectedAuditCandidate(c)}
           />
-        )}
 
-        {/* Disclaimer Note */}
-        {response && (
-          <div className="flex items-start gap-3 p-4 rounded-xl bg-slate-900/40 border border-slate-800/60 text-slate-400 text-xs leading-relaxed">
-            <Info className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
+          {/* Disclaimer Note */}
+          <div className="flex items-start gap-3 p-4 rounded-2xl bg-white border border-emerald-900/10 text-surface-muted text-xs leading-relaxed shadow-xs">
+            <Info className="w-4 h-4 text-forest shrink-0 mt-0.5" />
             <div>
-              <span className="font-semibold text-slate-300">Agricultural Market Transparency Disclosure: </span>
+              <span className="font-bold text-surface-darkCharcoal">Agricultural Market Transparency Disclosure: </span>
               {response.disclaimer}
             </div>
           </div>
-        )}
-      </div>
+        </div>
+      )}
 
       {/* Modal Calculation Waterfall */}
       <CalculationAuditModal
         candidate={selectedAuditCandidate}
         onClose={() => setSelectedAuditCandidate(null)}
       />
-    </section>
+    </div>
   );
 };
