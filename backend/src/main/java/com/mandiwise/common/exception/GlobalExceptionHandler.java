@@ -69,6 +69,14 @@ public class GlobalExceptionHandler {
                 .body(ApiResponse.error("Validation failed", "VALIDATION_ERROR", errors));
     }
 
+    @ExceptionHandler(com.mandiwise.quality.exception.VisionServiceUnavailableException.class)
+    public ResponseEntity<ApiResponse<Void>> handleVisionServiceUnavailable(com.mandiwise.quality.exception.VisionServiceUnavailableException ex) {
+        log.error("Vision service unavailable: {}", ex.getMessage());
+        return ResponseEntity
+                .status(HttpStatus.SERVICE_UNAVAILABLE)
+                .body(ApiResponse.error(ex.getMessage(), "VISION_SERVICE_UNAVAILABLE"));
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiResponse<Void>> handleGenericException(Exception ex) {
         log.error("Unhandled exception: ", ex);
