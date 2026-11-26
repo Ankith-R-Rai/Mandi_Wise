@@ -7,6 +7,7 @@ import { RecommendationsPage } from './pages/RecommendationsPage';
 import { MarketPricesPage } from './pages/MarketPricesPage';
 import { PriceTrendsPage } from './pages/PriceTrendsPage';
 import { NetEarningsAxiomPage } from './pages/NetEarningsAxiomPage';
+import { CropQualityPage } from './pages/CropQualityPage';
 import { AuthPage } from './pages/AuthPage';
 import { Footer } from './components/layout/Footer';
 import { Sprout } from 'lucide-react';
@@ -49,6 +50,7 @@ function AppContent() {
         <Routes>
           <Route path="/" element={<LandingPage />} />
           <Route path="/recommendations" element={<RecommendationsPage />} />
+          <Route path="/quality-assessment" element={<CropQualityPage />} />
           <Route path="/market-prices" element={<MarketPricesPage />} />
           <Route path="/price-trends" element={<PriceTrendsPage />} />
           <Route path="/net-earnings-axiom" element={<NetEarningsAxiomPage />} />

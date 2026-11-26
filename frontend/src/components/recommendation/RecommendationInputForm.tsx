@@ -8,12 +8,15 @@ interface RecommendationInputFormProps {
   vehicles: VehicleOption[];
   isLoading: boolean;
   defaultDistrict?: string;
+  initialCommodity?: string;
+  initialGrade?: string;
   onSubmit: (params: {
     commodityName: string;
     quantityKg: number;
     originDistrict: string;
     vehicleType?: VehicleType;
     customCostPerKm?: number;
+    grade?: string;
   }) => void;
 }
 
@@ -22,15 +25,31 @@ export const RecommendationInputForm: React.FC<RecommendationInputFormProps> = (
   vehicles,
   isLoading,
   defaultDistrict,
+  initialCommodity,
+  initialGrade,
   onSubmit,
 }) => {
-  const [commodity, setCommodity] = useState<string>('Tomato');
+  const [commodity, setCommodity] = useState<string>(initialCommodity || 'Tomato');
+  const [grade, setGrade] = useState<string>(initialGrade || '');
   const [unit, setUnit] = useState<'kg' | 'quintal'>('kg');
   const [quantityValue, setQuantityValue] = useState<number>(1500);
   const [originDistrict, setOriginDistrict] = useState<string>('Bengaluru Urban');
   const [selectedVehicle, setSelectedVehicle] = useState<VehicleType | 'AUTO'>('AUTO');
   const [showCustomRate, setShowCustomRate] = useState<boolean>(false);
   const [customCostPerKm, setCustomCostPerKm] = useState<number | undefined>(undefined);
+
+  // Sync initialCommodity and initialGrade if updated from parent / URL
+  useEffect(() => {
+    if (initialCommodity) {
+      setCommodity(initialCommodity);
+    }
+  }, [initialCommodity]);
+
+  useEffect(() => {
+    if (initialGrade !== undefined) {
+      setGrade(initialGrade);
+    }
+  }, [initialGrade]);
 
   // Set default district when available
   useEffect(() => {
@@ -62,11 +81,13 @@ export const RecommendationInputForm: React.FC<RecommendationInputFormProps> = (
       originDistrict,
       vehicleType: selectedVehicle === 'AUTO' ? undefined : selectedVehicle,
       customCostPerKm: showCustomRate && customCostPerKm && customCostPerKm > 0 ? customCostPerKm : undefined,
+      grade: grade && grade.trim() ? grade.trim() : undefined,
     });
   };
 
   const handleReset = () => {
     setCommodity('Tomato');
+    setGrade('');
     setUnit('kg');
     setQuantityValue(1500);
     setOriginDistrict(defaultDistrict || 'Bengaluru Urban');
@@ -140,6 +161,47 @@ export const RecommendationInputForm: React.FC<RecommendationInputFormProps> = (
                     {item.sub}
                   </span>
                 </div>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Row 1b: Quality Grade Tier */}
+      <div className="space-y-2.5">
+        <div className="flex items-center justify-between">
+          <label className="text-xs font-bold uppercase tracking-wider text-surface-muted block">
+            Quality Grade Tier (Option B Grade-Tiered Benchmarking)
+          </label>
+          <span className="text-[11px] text-surface-muted">
+            {grade.toLowerCase() === 'grade a'
+              ? 'Benchmarks Max Price'
+              : grade.toLowerCase() === 'grade c'
+              ? 'Benchmarks Min Price'
+              : 'Benchmarks Modal Price'}
+          </span>
+        </div>
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+          {[
+            { id: '', label: 'Unspecified', sub: 'Standard Modal' },
+            { id: 'Grade A', label: 'Grade A', sub: 'Max Ceiling' },
+            { id: 'Grade B', label: 'Grade B', sub: 'Modal Average' },
+            { id: 'Grade C', label: 'Grade C', sub: 'Min Floor' },
+          ].map((item) => {
+            const isSelected = grade.toLowerCase() === item.id.toLowerCase();
+            return (
+              <button
+                key={item.id}
+                type="button"
+                onClick={() => setGrade(item.id)}
+                className={`flex flex-col items-center justify-center p-2.5 rounded-xl border text-center transition-all ${
+                  isSelected
+                    ? 'bg-forest-lightSage border-forest text-forest font-bold shadow-2xs ring-1 ring-forest/30'
+                    : 'bg-[#F9FAF8] border-emerald-900/10 hover:bg-white text-surface-charcoal'
+                }`}
+              >
+                <span className="text-xs font-bold block">{item.label}</span>
+                <span className="text-[10px] text-surface-muted block leading-tight">{item.sub}</span>
               </button>
             );
           })}

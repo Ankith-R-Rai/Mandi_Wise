@@ -58,6 +58,7 @@ export interface RecommendationRequest {
   originDistrict: string;
   vehicleType?: VehicleType;
   customCostPerKm?: number;
+  grade?: string;
 }
 
 export interface RecommendationResponse {

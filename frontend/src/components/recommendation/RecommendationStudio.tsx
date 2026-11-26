@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { recommendationService } from '../../services/recommendationService';
 import {
   DistrictOption,
@@ -14,6 +15,10 @@ import { CalculationAuditModal } from './CalculationAuditModal';
 import { Scale, AlertCircle, Info, ShieldCheck, CheckCircle2, Loader2, Sparkles } from 'lucide-react';
 
 export const RecommendationStudio: React.FC = () => {
+  const [searchParams] = useSearchParams();
+  const urlCommodity = searchParams.get('commodity') || undefined;
+  const urlGrade = searchParams.get('grade') || undefined;
+
   const [districts, setDistricts] = useState<DistrictOption[]>([]);
   const [vehicles, setVehicles] = useState<VehicleOption[]>([]);
   const [response, setResponse] = useState<RecommendationResponse | null>(null);
@@ -44,11 +49,12 @@ export const RecommendationStudio: React.FC = () => {
           setDistricts(districtsData);
           setVehicles(vehiclesData);
 
-          // Initial baseline calculation
+          // Initial baseline calculation with optional URL params
           const initialRes = await recommendationService.compareAndRecommend({
-            commodityName: 'Tomato',
+            commodityName: urlCommodity || 'Tomato',
             quantityKg: 1500,
             originDistrict: 'Bengaluru Urban',
+            grade: urlGrade,
           });
 
           setResponse(initialRes);
@@ -142,12 +148,33 @@ export const RecommendationStudio: React.FC = () => {
         </div>
       )}
 
+      {/* AgriVision Linkage Banner */}
+      {urlGrade && (
+        <div className="flex items-center justify-between p-4 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-900 shadow-xs animate-fade-in">
+          <div className="flex items-center gap-3">
+            <div className="p-2 rounded-xl bg-emerald-600 text-white shadow-xs">
+              <Sparkles className="w-4 h-4" />
+            </div>
+            <div>
+              <p className="text-xs font-bold uppercase tracking-wider text-emerald-800">
+                AgriVision Quality Benchmark Active
+              </p>
+              <p className="text-xs text-emerald-900/90 mt-0.5">
+                Arbitrage prices benchmarked for <strong>{urlCommodity || 'Crop'}</strong> under <strong>{urlGrade}</strong> standards ({urlGrade.toLowerCase() === 'grade a' ? 'Max price ceiling' : urlGrade.toLowerCase() === 'grade c' ? 'Min price floor' : 'Modal standard'}).
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Main Form */}
       <RecommendationInputForm
         districts={districts}
         vehicles={vehicles}
         isLoading={isLoading || isInitializing}
         defaultDistrict="Bengaluru Urban"
+        initialCommodity={urlCommodity}
+        initialGrade={urlGrade}
         onSubmit={handleCalculate}
       />
 
