@@ -23,6 +23,21 @@ app.add_middleware(
 app.include_router(data_router)
 app.include_router(vision_router)
 
+@app.get("/", tags=["Root"])
+def root():
+    return {
+        "service": "mandiwise-python-service",
+        "status": "UP",
+        "docs": "/docs",
+        "health": "/health",
+        "vision_endpoints": {
+            "status": "/api/status",
+            "crops": "/api/crops",
+            "analyze": "/api/analyze"
+        }
+    }
+
+
 @app.get("/health", tags=["Health"])
 def health_check():
     return {
