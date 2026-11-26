@@ -118,6 +118,69 @@ export const CommodityIcon: React.FC<CommodityIconProps> = ({
     );
   }
 
+  if (norm.includes('brinjal') || norm.includes('eggplant')) {
+    return (
+      <svg
+        width={size}
+        height={size}
+        viewBox="0 0 24 24"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        className={cn('inline-block shrink-0', className)}
+        aria-label="Brinjal"
+      >
+        {/* Brinjal Body */}
+        <path
+          d="M12 7C8.5 7 7 11 7 15C7 19 9.5 21 12 21C14.5 21 17 19 17 15C17 11 15.5 7 12 7Z"
+          fill="#581C87"
+        />
+        <path
+          d="M10 11C9.2 12.5 9.2 15 10 17"
+          stroke="#C084FC"
+          strokeWidth="1.2"
+          strokeLinecap="round"
+          opacity="0.4"
+        />
+        {/* Calyx & Stem */}
+        <path
+          d="M12 3V6M12 6C10 5.5 8 6.5 8 8C9.5 8.5 11 7.5 12 6ZM12 6C14 5.5 16 6.5 16 8C14.5 8.5 13 7.5 12 6Z"
+          fill="#15803D"
+          stroke="#15803D"
+          strokeWidth="1.2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </svg>
+    );
+  }
+
+  if (norm.includes('chilli') || norm.includes('chili')) {
+    return (
+      <svg
+        width={size}
+        height={size}
+        viewBox="0 0 24 24"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        className={cn('inline-block shrink-0', className)}
+        aria-label="Chilli"
+      >
+        {/* Curved Chilli Pod */}
+        <path
+          d="M13 7C16 9 17 14 15 18C13.5 20.5 11 21 10 20.5C9.2 20 9.5 18 10.5 15C11.5 12 12 8 13 7Z"
+          fill="#16A34A"
+        />
+        {/* Stem */}
+        <path
+          d="M13 7C13.5 5 15 4 16 3"
+          stroke="#15803D"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+        />
+      </svg>
+    );
+  }
+
   // Fallback agricultural crop icon
   return <Sprout size={size} className={cn('text-forest-fresh shrink-0', className)} />;
 };
