@@ -6,6 +6,7 @@ import com.mandiwise.market.entity.MarketPrice;
 import com.mandiwise.market.repository.CommodityRepository;
 import com.mandiwise.market.repository.MarketPriceRepository;
 import com.mandiwise.recommendation.dto.DistrictDto;
+import com.mandiwise.recommendation.dto.MandiCandidateDto;
 import com.mandiwise.recommendation.dto.RecommendationRequest;
 import com.mandiwise.recommendation.dto.RecommendationResponse;
 import com.mandiwise.recommendation.dto.VehicleDto;
@@ -262,6 +263,73 @@ class RecommendationServiceTest {
 
         RecommendationResponse bulkResponse = onionService.compareAndRecommend(bulkRequest);
         assertThat(bulkResponse.getTopRecommendation().getMarketName()).isEqualTo("Bengaluru (Yeshwanthpur)");
+    }
+
+    @Test
+    void calculateRecommendation_withGradeA_usesMaxPriceForRevenue() {
+        MarketPrice priceWithBand = new MarketPrice();
+        priceWithBand.setId(UUID.randomUUID());
+        priceWithBand.setCommodity(tomato);
+        priceWithBand.setMarket(kolarMarket);
+        priceWithBand.setMinPrice(BigDecimal.valueOf(1800));
+        priceWithBand.setModalPrice(BigDecimal.valueOf(2200));
+        priceWithBand.setMaxPrice(BigDecimal.valueOf(2600));
+        priceWithBand.setObservationDate(LocalDate.now());
+
+        RecommendationService service = buildCustomService(tomato, List.of(priceWithBand));
+
+        RecommendationRequest request = new RecommendationRequest("Tomato", BigDecimal.valueOf(1000), "Kolar");
+        request.setGrade("Grade A");
+
+        RecommendationResponse response = service.compareAndRecommend(request);
+        assertThat(response).isNotNull();
+        MandiCandidateDto candidate = response.getCandidateRankings().get(0);
+        // 1000 kg = 10 quintals. At Grade A max price 2600/q -> gross revenue = 26,000
+        assertThat(candidate.getBreakdown().getGrossRevenue().intValue()).isEqualTo(26000);
+    }
+
+    @Test
+    void calculateRecommendation_withGradeC_usesMinPriceForRevenue() {
+        MarketPrice priceWithBand = new MarketPrice();
+        priceWithBand.setId(UUID.randomUUID());
+        priceWithBand.setCommodity(tomato);
+        priceWithBand.setMarket(kolarMarket);
+        priceWithBand.setMinPrice(BigDecimal.valueOf(1800));
+        priceWithBand.setModalPrice(BigDecimal.valueOf(2200));
+        priceWithBand.setMaxPrice(BigDecimal.valueOf(2600));
+        priceWithBand.setObservationDate(LocalDate.now());
+
+        RecommendationService service = buildCustomService(tomato, List.of(priceWithBand));
+
+        RecommendationRequest request = new RecommendationRequest("Tomato", BigDecimal.valueOf(1000), "Kolar");
+        request.setGrade("Grade C");
+
+        RecommendationResponse response = service.compareAndRecommend(request);
+        assertThat(response).isNotNull();
+        MandiCandidateDto candidate = response.getCandidateRankings().get(0);
+        // 1000 kg = 10 quintals. At Grade C min price 1800/q -> gross revenue = 18,000
+        assertThat(candidate.getBreakdown().getGrossRevenue().intValue()).isEqualTo(18000);
+    }
+
+    @Test
+    void calculateRecommendation_withNullGrade_maintainsBackwardCompatibility() {
+        MarketPrice priceWithBand = new MarketPrice();
+        priceWithBand.setId(UUID.randomUUID());
+        priceWithBand.setCommodity(tomato);
+        priceWithBand.setMarket(kolarMarket);
+        priceWithBand.setMinPrice(BigDecimal.valueOf(1800));
+        priceWithBand.setModalPrice(BigDecimal.valueOf(2200));
+        priceWithBand.setMaxPrice(BigDecimal.valueOf(2600));
+        priceWithBand.setObservationDate(LocalDate.now());
+
+        RecommendationService service = buildCustomService(tomato, List.of(priceWithBand));
+
+        RecommendationRequest request = new RecommendationRequest("Tomato", BigDecimal.valueOf(1000), "Kolar");
+        // Grade is null -> default to modal price 2200/q -> gross revenue = 22,000
+        RecommendationResponse response = service.compareAndRecommend(request);
+        assertThat(response).isNotNull();
+        MandiCandidateDto candidate = response.getCandidateRankings().get(0);
+        assertThat(candidate.getBreakdown().getGrossRevenue().intValue()).isEqualTo(22000);
     }
 
     private RecommendationService buildCustomService(Commodity commodity, List<MarketPrice> prices) {

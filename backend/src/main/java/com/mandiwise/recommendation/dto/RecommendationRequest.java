@@ -25,6 +25,8 @@ public class RecommendationRequest {
     @DecimalMin(value = "0.0", message = "Custom cost per km must be positive")
     private BigDecimal customCostPerKm;
 
+    private String grade;
+
     public RecommendationRequest() {}
 
     public RecommendationRequest(String commodityName, BigDecimal quantityKg, String originDistrict) {
@@ -79,5 +81,13 @@ public class RecommendationRequest {
 
     public void setCustomCostPerKm(BigDecimal customCostPerKm) {
         this.customCostPerKm = customCostPerKm;
+    }
+
+    public String getGrade() {
+        return grade;
+    }
+
+    public void setGrade(String grade) {
+        this.grade = grade;
     }
 }

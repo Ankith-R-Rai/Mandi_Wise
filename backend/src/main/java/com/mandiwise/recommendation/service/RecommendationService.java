@@ -102,9 +102,16 @@ public class RecommendationService {
                     marketLon
             );
 
+            BigDecimal benchmarkPrice = price.getModalPrice();
+            if ("Grade A".equalsIgnoreCase(request.getGrade()) && price.getMaxPrice() != null) {
+                benchmarkPrice = price.getMaxPrice();
+            } else if ("Grade C".equalsIgnoreCase(request.getGrade()) && price.getMinPrice() != null) {
+                benchmarkPrice = price.getMinPrice();
+            }
+
             CalculationBreakdown breakdown = netEarningsCalculator.calculate(
                     quantityKg,
-                    price.getModalPrice(),
+                    benchmarkPrice,
                     roadDistanceKm,
                     vehicleType,
                     request.getCustomCostPerKm(),
